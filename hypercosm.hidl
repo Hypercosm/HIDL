@@ -1,0 +1,77 @@
+namespace hypercosm
+
+interface Object {
+    version 0 0 0
+
+    methods {
+        list_interfaces() -> []string
+        release()
+    }
+}
+
+interface Root {
+    version 0 0 0
+
+    methods {
+        list_extenstions() -> []string
+        ping()
+        get_object_by_id(id: uuid) -> object
+        get_object_by_name(name: string) -> object
+    }
+}
+
+extension asset_delivery {
+    version 0 0 0
+    interface {
+        events {
+            load_assets(assets: []Asset)
+            unload_assets(assets:  []uuid)
+        }
+
+        methods {
+            fetchById(id: uuid) -> Asset
+            fetchByName(name: string) -> Asset
+            fetchByIds(ids: []uuid) -> []Asset
+            fetchByNames(names: []string) -> []Asset
+            getId(name: string) -> uuid
+        }
+    }
+    
+    struct Asset {
+        id: uuid
+        name: string
+        data: []u8
+    }
+}
+
+extension world {
+    version 0 0 0 
+
+    interface {
+        events {
+            add_entitys(entities: []EntityInfo)
+            update_entitys(entities: []EntityInfo)
+            remove_entitys(entities: []uuid)
+        }
+    }
+
+    interface Entity {
+        methods {
+            interact()
+        }
+    }
+
+    struct EntityInfo {
+        assetId: uuid
+        entity: Entity
+        transformation: matrix4x4
+        flags: EntityFlags
+    }
+
+    enum EntityFlags(vu128) {
+        None = 0
+        Interactable = 1
+        Collidable = 2
+    }
+
+}
