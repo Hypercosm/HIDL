@@ -1,0 +1,383 @@
+{
+  "name": "hypercosm",
+  "interfaces": [
+    {
+      "name": "Object",
+      "version": [
+        0,
+        0,
+        0
+      ],
+      "methods": [
+        {
+          "name": "list_interfaces",
+          "args": [],
+          "ret": {
+            "Array": {
+              "Primitive": "String"
+            }
+          }
+        },
+        {
+          "name": "release",
+          "args": [],
+          "ret": null
+        }
+      ],
+      "events": []
+    },
+    {
+      "name": "Root",
+      "version": [
+        0,
+        0,
+        0
+      ],
+      "methods": [
+        {
+          "name": "list_extenstions",
+          "args": [],
+          "ret": {
+            "Array": {
+              "Primitive": "String"
+            }
+          }
+        },
+        {
+          "name": "ping",
+          "args": [],
+          "ret": null
+        },
+        {
+          "name": "get_object_by_id",
+          "args": [
+            {
+              "name": "id",
+              "ty": {
+                "Primitive": "Uuid"
+              }
+            }
+          ],
+          "ret": {
+            "Primitive": "Object"
+          }
+        },
+        {
+          "name": "get_object_by_name",
+          "args": [
+            {
+              "name": "name",
+              "ty": {
+                "Primitive": "String"
+              }
+            }
+          ],
+          "ret": {
+            "Primitive": "Object"
+          }
+        }
+      ],
+      "events": []
+    }
+  ],
+  "types": [],
+  "extensions": [
+    {
+      "name": "asset_delivery",
+      "version": [
+        0,
+        0,
+        0
+      ],
+      "interface": null,
+      "interfaces": [
+        {
+          "name": "asset_delivery",
+          "version": [
+            0,
+            0,
+            0
+          ],
+          "methods": [
+            {
+              "name": "fetchById",
+              "args": [
+                {
+                  "name": "id",
+                  "ty": {
+                    "Primitive": "Uuid"
+                  }
+                }
+              ],
+              "ret": {
+                "Custom": "Asset"
+              }
+            },
+            {
+              "name": "fetchByName",
+              "args": [
+                {
+                  "name": "name",
+                  "ty": {
+                    "Primitive": "String"
+                  }
+                }
+              ],
+              "ret": {
+                "Custom": "Asset"
+              }
+            },
+            {
+              "name": "fetchByIds",
+              "args": [
+                {
+                  "name": "ids",
+                  "ty": {
+                    "Array": {
+                      "Primitive": "Uuid"
+                    }
+                  }
+                }
+              ],
+              "ret": {
+                "Array": {
+                  "Custom": "Asset"
+                }
+              }
+            },
+            {
+              "name": "fetchByNames",
+              "args": [
+                {
+                  "name": "names",
+                  "ty": {
+                    "Array": {
+                      "Primitive": "String"
+                    }
+                  }
+                }
+              ],
+              "ret": {
+                "Array": {
+                  "Custom": "Asset"
+                }
+              }
+            },
+            {
+              "name": "getId",
+              "args": [
+                {
+                  "name": "name",
+                  "ty": {
+                    "Primitive": "String"
+                  }
+                }
+              ],
+              "ret": {
+                "Primitive": "Uuid"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "load_assets",
+              "args": [
+                {
+                  "name": "assets",
+                  "ty": {
+                    "Array": {
+                      "Custom": "Asset"
+                    }
+                  }
+                }
+              ],
+              "ret": null
+            },
+            {
+              "name": "unload_assets",
+              "args": [
+                {
+                  "name": "assets",
+                  "ty": {
+                    "Array": {
+                      "Primitive": "Uuid"
+                    }
+                  }
+                }
+              ],
+              "ret": null
+            }
+          ]
+        }
+      ],
+      "types": [
+        {
+          "name": "Asset",
+          "kind": {
+            "Struct": {
+              "fields": [
+                {
+                  "name": "id",
+                  "ty": {
+                    "Primitive": "Uuid"
+                  }
+                },
+                {
+                  "name": "name",
+                  "ty": {
+                    "Primitive": "String"
+                  }
+                },
+                {
+                  "name": "data",
+                  "ty": {
+                    "Array": {
+                      "IntType": "U8"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "world",
+      "version": [
+        0,
+        0,
+        0
+      ],
+      "interface": null,
+      "interfaces": [
+        {
+          "name": "world",
+          "version": [
+            0,
+            0,
+            0
+          ],
+          "methods": [],
+          "events": [
+            {
+              "name": "add_entitys",
+              "args": [
+                {
+                  "name": "entities",
+                  "ty": {
+                    "Array": {
+                      "Custom": "EntityInfo"
+                    }
+                  }
+                }
+              ],
+              "ret": null
+            },
+            {
+              "name": "update_entitys",
+              "args": [
+                {
+                  "name": "entities",
+                  "ty": {
+                    "Array": {
+                      "Custom": "EntityInfo"
+                    }
+                  }
+                }
+              ],
+              "ret": null
+            },
+            {
+              "name": "remove_entitys",
+              "args": [
+                {
+                  "name": "entities",
+                  "ty": {
+                    "Array": {
+                      "Primitive": "Uuid"
+                    }
+                  }
+                }
+              ],
+              "ret": null
+            }
+          ]
+        },
+        {
+          "name": "Entity",
+          "version": [
+            0,
+            0,
+            0
+          ],
+          "methods": [
+            {
+              "name": "interact",
+              "args": [],
+              "ret": null
+            }
+          ],
+          "events": []
+        }
+      ],
+      "types": [
+        {
+          "name": "EntityInfo",
+          "kind": {
+            "Struct": {
+              "fields": [
+                {
+                  "name": "assetId",
+                  "ty": {
+                    "Primitive": "Uuid"
+                  }
+                },
+                {
+                  "name": "entity",
+                  "ty": {
+                    "Custom": "Entity"
+                  }
+                },
+                {
+                  "name": "transformation",
+                  "ty": {
+                    "Primitive": "Matrix4x4"
+                  }
+                },
+                {
+                  "name": "flags",
+                  "ty": {
+                    "Custom": "EntityFlags"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "EntityFlags",
+          "kind": {
+            "Enum": {
+              "backing": "VU128",
+              "fields": [
+                {
+                  "name": "None",
+                  "value": 0
+                },
+                {
+                  "name": "Interactable",
+                  "value": 1
+                },
+                {
+                  "name": "Collidable",
+                  "value": 2
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
