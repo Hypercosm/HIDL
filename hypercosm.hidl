@@ -13,7 +13,7 @@ interface Root {
     version 0 0 0
 
     methods {
-        list_extenstions() -> []string
+        list_extentions() -> []string
         ping()
         get_object_by_id(id: uuid) -> object
         get_object_by_name(name: string) -> object
@@ -29,10 +29,10 @@ extension asset_delivery {
         }
 
         methods {
-            fetchById(id: uuid) -> Asset
-            fetchByName(name: string) -> Asset
-            fetchByIds(ids: []uuid) -> []Asset
-            fetchByNames(names: []string) -> []Asset
+            fetch_by_id(id: uuid) -> Asset
+            fetch_by_name(name: string) -> Asset
+            fetch_by_ids(ids: []uuid) -> []Asset
+            fetch_by_names(names: []string) -> []Asset
             getId(name: string) -> uuid
         }
     }
@@ -49,9 +49,9 @@ extension world {
 
     interface {
         events {
-            add_entitys(entities: []EntityInfo)
-            update_entitys(entities: []EntityInfo)
-            remove_entitys(entities: []uuid)
+            add_entities(entities: []EntityInfo)
+            update_entities(entities: []EntityInfo)
+            remove_entities(entities: []Entity)
         }
     }
 
@@ -68,7 +68,7 @@ extension world {
         flags: EntityFlags
     }
 
-    enum EntityFlags(vu128) {
+    enum EntityFlags(vu64) {
         None = 0
         Interactable = 1
         Collidable = 2
