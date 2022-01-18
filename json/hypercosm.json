@@ -35,7 +35,7 @@
       ],
       "methods": [
         {
-          "name": "list_extenstions",
+          "name": "list_extentions",
           "args": [],
           "ret": {
             "Array": {
@@ -100,7 +100,7 @@
           ],
           "methods": [
             {
-              "name": "fetchById",
+              "name": "fetch_by_id",
               "args": [
                 {
                   "name": "id",
@@ -114,7 +114,7 @@
               }
             },
             {
-              "name": "fetchByName",
+              "name": "fetch_by_name",
               "args": [
                 {
                   "name": "name",
@@ -128,7 +128,7 @@
               }
             },
             {
-              "name": "fetchByIds",
+              "name": "fetch_by_ids",
               "args": [
                 {
                   "name": "ids",
@@ -146,7 +146,7 @@
               }
             },
             {
-              "name": "fetchByNames",
+              "name": "fetch_by_names",
               "args": [
                 {
                   "name": "names",
@@ -261,7 +261,7 @@
           "methods": [],
           "events": [
             {
-              "name": "add_entitys",
+              "name": "add_entities",
               "args": [
                 {
                   "name": "entities",
@@ -275,7 +275,7 @@
               "ret": null
             },
             {
-              "name": "update_entitys",
+              "name": "update_entities",
               "args": [
                 {
                   "name": "entities",
@@ -289,13 +289,13 @@
               "ret": null
             },
             {
-              "name": "remove_entitys",
+              "name": "remove_entities",
               "args": [
                 {
                   "name": "entities",
                   "ty": {
                     "Array": {
-                      "Primitive": "Uuid"
+                      "Custom": "Entity"
                     }
                   }
                 }
@@ -359,7 +359,7 @@
           "name": "EntityFlags",
           "kind": {
             "Enum": {
-              "backing": "VU128",
+              "backing": "VU64",
               "fields": [
                 {
                   "name": "None",
