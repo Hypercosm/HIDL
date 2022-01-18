@@ -4,7 +4,7 @@
     {
       "name": "Object",
       "version": [
-        0,
+        1,
         0,
         0
       ],
@@ -30,7 +30,7 @@
       "name": "Root",
       "version": [
         0,
-        0,
+        1,
         0
       ],
       "methods": [
@@ -86,7 +86,7 @@
       "name": "asset_delivery",
       "version": [
         0,
-        0,
+        1,
         0
       ],
       "interface": null,
@@ -95,7 +95,7 @@
           "name": "asset_delivery",
           "version": [
             0,
-            0,
+            1,
             0
           ],
           "methods": [
@@ -246,7 +246,7 @@
       "name": "world",
       "version": [
         0,
-        0,
+        1,
         0
       ],
       "interface": null,
@@ -255,7 +255,7 @@
           "name": "world",
           "version": [
             0,
-            0,
+            1,
             0
           ],
           "methods": [],
@@ -308,7 +308,7 @@
           "name": "Entity",
           "version": [
             0,
-            0,
+            1,
             0
           ],
           "methods": [

@@ -1,7 +1,7 @@
 namespace hypercosm
 
 interface Object {
-    version 0 0 0
+    version 1 0 0
 
     methods {
         list_interfaces() -> []string
@@ -10,7 +10,7 @@ interface Object {
 }
 
 interface Root {
-    version 0 0 0
+    version 0 1 0
 
     methods {
         list_extentions() -> []string
@@ -21,7 +21,7 @@ interface Root {
 }
 
 extension asset_delivery {
-    version 0 0 0
+    version 0 1 0
     interface {
         events {
             load_assets(assets: []Asset)
@@ -45,7 +45,7 @@ extension asset_delivery {
 }
 
 extension world {
-    version 0 0 0 
+    version 0 1 0 
 
     interface {
         events {
