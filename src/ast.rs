@@ -13,6 +13,7 @@ pub struct Namespace {
 pub struct Extension {
     pub name: String,
     pub version: Version,
+    #[serde(default, skip_serializing_if = "always_none")]
     pub interface: Option<ImplicitInterface>,
     pub interfaces: Vec<ExtensionInterface>,
     pub types: Vec<TypeDef>,
@@ -37,7 +38,9 @@ pub struct ImplicitInterface {
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ExtensionInterface {
     pub name: String,
-    // May get version from extension
+    // In HIR, may get version from extension
+    //
+    // TODO: Assert is present during (de)serialization
     pub version: Option<Version>,
     pub methods: Vec<Func>,
     pub events: Vec<Func>,
@@ -138,4 +141,10 @@ pub struct Struct {
 pub struct StructField {
     pub name: String,
     pub ty: Type,
+}
+
+fn always_none<T>(x: &Option<T>) -> bool {
+    // assert_matches!(x, None);
+    assert!(x.is_none());
+    true
 }
