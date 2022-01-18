@@ -35,7 +35,7 @@
       ],
       "methods": [
         {
-          "name": "list_extentions",
+          "name": "list_extensions",
           "args": [],
           "ret": {
             "Array": {

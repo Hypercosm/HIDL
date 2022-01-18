@@ -13,7 +13,7 @@ interface Root {
     version 0 1 0
 
     methods {
-        list_extentions() -> []string
+        list_extensions() -> []string
         ping()
         get_object_by_id(id: uuid) -> object
         get_object_by_name(name: string) -> object
