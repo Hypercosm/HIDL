@@ -80,22 +80,21 @@ pub enum IntType {
     U16,
     U32,
     U64,
-    U128,
+
     VU8,
     VU16,
     VU32,
     VU64,
-    VU128,
+
     I8,
     I16,
     I32,
     I64,
-    I128,
+
     VI8,
     VI16,
     VI32,
     VI64,
-    VI128,
 }
 
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]

@@ -96,25 +96,21 @@ IntType: IntType = {
     "u16" => IntType::U16,
     "u32" => IntType::U32,
     "u64" => IntType::U64,
-    "u128" => IntType::U128,
     
     "vu8" => IntType::VU8,
     "vu16" => IntType::VU16,
     "vu32" => IntType::VU32,
     "vu64" => IntType::VU64,
-    "vu128" => IntType::VU128,
 
     "i8" => IntType::I8,
     "i16" => IntType::I16,
     "i32" => IntType::I32,
     "i64" => IntType::I64,
-    "i128" => IntType::I128,
 
     "vi8" => IntType::VI8,
     "vi16" => IntType::VI16,
     "vi32" => IntType::VI32,
     "vi64" => IntType::VI64,
-    "vi128" => IntType::VI128,
 }
 
 // Typedefs
