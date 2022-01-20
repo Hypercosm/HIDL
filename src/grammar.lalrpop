@@ -74,7 +74,7 @@ Type: Type = {
     PrimType => Type::Primitive(<>),
     Ident => Type::Custom(<>),
     IntType => Type::IntType(<>),
-    "[" <key_ty:Type> "]" <value_ty:Type> => Type::Dictionary(Box::new(key_ty), Box::new(value_ty)),
+    "[" <key:Type> "]" <value:Type> => Type::Dictionary(Box::new(Dictionary{key, value})),
     "[]" <Type>  => Type::Array(Box::new(<>)),
 }
 
@@ -120,7 +120,6 @@ TypeDef: TypeDef = {
     "struct" <name:Ident> <s:Struct>  => TypeDef{name, kind: TypeKind::Struct(s)},
     "enum" <name:Ident> "(" <backing:IntType> ")" <fields:Enum> 
         => TypeDef{name, kind: TypeKind::Enum(Enum{fields, backing})},
-    // Enum => TypeDef::Enum(<>),
 }
 
 Struct: Struct = { "{" <fields:List<StructField>> "}"  => Struct{<>} }
