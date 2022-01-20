@@ -61,8 +61,14 @@ pub enum Type {
     Primitive(PrimType),
     Custom(String),
     Array(Box<Type>),
-    Dictionary(Box<Type>, Box<Type>),
+    Dictionary(Box<Dictionary>),
     IntType(IntType),
+}
+
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Dictionary {
+    pub key: Type,
+    pub value: Type,
 }
 
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]

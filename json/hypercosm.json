@@ -405,14 +405,14 @@
                 {
                   "name": "exports",
                   "ty": {
-                    "Dictionary": [
-                      {
+                    "Dictionary": {
+                      "key": {
                         "Primitive": "String"
                       },
-                      {
+                      "value": {
                         "Primitive": "String"
                       }
-                    ]
+                    }
                   }
                 }
               ],
