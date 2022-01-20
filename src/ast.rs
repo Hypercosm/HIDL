@@ -61,6 +61,7 @@ pub enum Type {
     Primitive(PrimType),
     Custom(String),
     Array(Box<Type>),
+    Dictionary(Box<Type>, Box<Type>),
     IntType(IntType),
 }
 

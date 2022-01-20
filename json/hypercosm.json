@@ -376,6 +376,113 @@
           }
         }
       ]
+    },
+    {
+      "name": "execution_context",
+      "version": [
+        0,
+        1,
+        0
+      ],
+      "interfaces": [
+        {
+          "name": "execution_context",
+          "version": [
+            0,
+            1,
+            0
+          ],
+          "methods": [
+            {
+              "name": "load_wasm_module",
+              "args": [
+                {
+                  "name": "assetId",
+                  "ty": {
+                    "Primitive": "Uuid"
+                  }
+                },
+                {
+                  "name": "exports",
+                  "ty": {
+                    "Dictionary": [
+                      {
+                        "Primitive": "String"
+                      },
+                      {
+                        "Primitive": "String"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "ret": {
+                "IntType": "VU64"
+              }
+            },
+            {
+              "name": "load_lua_script",
+              "args": [
+                {
+                  "name": "assetId",
+                  "ty": {
+                    "Primitive": "Uuid"
+                  }
+                }
+              ],
+              "ret": {
+                "IntType": "VU64"
+              }
+            },
+            {
+              "name": "load_inline_lua_script",
+              "args": [
+                {
+                  "name": "script",
+                  "ty": {
+                    "Primitive": "String"
+                  }
+                }
+              ],
+              "ret": {
+                "IntType": "VU64"
+              }
+            },
+            {
+              "name": "begin_execution",
+              "args": [
+                {
+                  "name": "module_or_script",
+                  "ty": {
+                    "IntType": "VU64"
+                  }
+                },
+                {
+                  "name": "entry_point",
+                  "ty": {
+                    "Primitive": "String"
+                  }
+                }
+              ],
+              "ret": null
+            },
+            {
+              "name": "begin_inline_lua_execution",
+              "args": [
+                {
+                  "name": "script",
+                  "ty": {
+                    "Primitive": "String"
+                  }
+                }
+              ],
+              "ret": null
+            }
+          ],
+          "events": []
+        }
+      ],
+      "types": []
     }
   ]
 }

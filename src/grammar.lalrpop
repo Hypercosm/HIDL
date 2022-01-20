@@ -74,6 +74,7 @@ Type: Type = {
     PrimType => Type::Primitive(<>),
     Ident => Type::Custom(<>),
     IntType => Type::IntType(<>),
+    "[" <key_ty:Type> "]" <value_ty:Type> => Type::Dictionary(Box::new(key_ty), Box::new(value_ty)),
     "[]" <Type>  => Type::Array(Box::new(<>)),
 }
 
