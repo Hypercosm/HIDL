@@ -3,12 +3,18 @@
 //! - All enum variants have a number
 //! - The implicit interface is None
 //! - All interfaces have a version
+//! - Docs have been striped with the [`doc`] module
+
+// TODO: At some point make HIR a different type to AST
 
 use std::collections::BTreeSet;
 
-use crate::ast::{
-    Enum, EnumField, Extension, ExtensionInterface, ImplicitInterface, Namespace, TypeDef,
-    TypeKind, Version,
+use crate::{
+    ast::{
+        Enum, EnumField, Extension, ExtensionInterface, Func, ImplicitInterface, Interface,
+        Namespace, TypeDef, TypeKind, Version,
+    },
+    docs,
 };
 
 pub fn lower_namespace(
@@ -21,9 +27,9 @@ pub fn lower_namespace(
 ) -> Namespace {
     Namespace {
         name,
-        interfaces,
-        types: types.into_iter().map(lower_type_def).collect(),
-        extensions: extensions.into_iter().map(lower_extension).collect(),
+        interfaces: vmap(interfaces, lower_interface),
+        types: vmap(types, lower_type_def),
+        extensions: vmap(extensions, lower_extension),
     }
 }
 
@@ -50,11 +56,21 @@ fn lower_extension(
 
     Extension {
         name,
-        docs,
+        docs: docs::lower(&docs),
         version,
         interface: None,
         interfaces: new_interfaces,
         types,
+    }
+}
+
+fn lower_interface(i: Interface) -> Interface {
+    Interface {
+        docs: docs::lower(&i.docs),
+        name: i.name,
+        version: i.version,
+        methods: vmap(i.methods, lower_func),
+        events: vmap(i.events, lower_func),
     }
 }
 
@@ -65,26 +81,26 @@ fn lower_implicit_interface(
 ) -> ExtensionInterface {
     ExtensionInterface {
         name: name.to_owned(),
-        docs: i.docs,
+        docs: docs::lower(&i.docs),
         version: Some(version),
-        methods: i.methods,
-        events: i.events,
+        methods: vmap(i.methods, lower_func),
+        events: vmap(i.events, lower_func),
     }
 }
 
 fn lower_extension_interface(i: ExtensionInterface, version: Version) -> ExtensionInterface {
     ExtensionInterface {
         name: i.name,
-        docs: i.docs,
+        docs: docs::lower(&i.docs),
         version: Some(i.version.unwrap_or(version)),
-        methods: i.methods,
-        events: i.events,
+        methods: vmap(i.methods, lower_func),
+        events: vmap(i.events, lower_func),
     }
 }
 fn lower_type_def(TypeDef { name, kind, docs }: TypeDef) -> TypeDef {
     TypeDef {
         name,
-        docs,
+        docs: docs::lower(&docs),
         kind: match kind {
             TypeKind::Struct(_) => kind,
             TypeKind::Enum(e) => TypeKind::Enum(lower_enum(e)),
@@ -117,4 +133,13 @@ fn lower_enum(Enum { backing, fields }: Enum) -> Enum {
         fields: new_fields,
         backing,
     }
+}
+
+fn lower_func(m: Func) -> Func {
+    let docs = docs::lower(&m.docs);
+    Func { docs, ..m }
+}
+
+fn vmap<T, U, F: Fn(T) -> U>(v: Vec<T>, f: F) -> Vec<U> {
+    v.into_iter().map(f).collect()
 }

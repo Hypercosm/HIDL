@@ -9,4 +9,5 @@ lalrpop_util::lalrpop_mod!(
 // pub mod grammar;
 
 pub mod ast;
+mod docs;
 pub mod hir;

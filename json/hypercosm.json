@@ -3,7 +3,7 @@
   "interfaces": [
     {
       "name": "Object",
-      "docs": "\r\n     * The root interface, that all interfaces inherit from and\r\n     * all objects implement\r\n     ",
+      "docs": "The root interface, that all interfaces inherit from and\nall objects implement\n",
       "version": [
         1,
         0,
@@ -12,7 +12,7 @@
       "methods": [
         {
           "name": "list_interfaces",
-          "docs": "\r\n         * Remove the object from the object list \r\n         *\r\n         * Future attempts to make calls on the object ID **MUST** fail.\r\n         *\r\n         * The resources associated with the object may be released, but the \r\n         * object ID may not be reused, we have plenty of them\r\n         *\r\n         * It is an error to remove the root singleton (id 0)\r\n         ",
+          "docs": "Remove the object from the object list\n\nFuture attempts to make calls on the object ID **MUST** fail.\n\nThe resources associated with the object may be released, but the\nobject ID may not be reused, we have plenty of them\n\nIt is an error to remove the root singleton (id 0)\n",
           "args": [],
           "ret": {
             "Array": {
@@ -22,7 +22,7 @@
         },
         {
           "name": "release",
-          "docs": " \r\n         * Get all interfaces implemented by an object\r\n         * \r\n         * The interfaces will be listed in the format `{namespace}.{extension}.{interface_name}.{version}`\r\n         ",
+          "docs": "Get all interfaces implemented by an object\n\nThe interfaces will be listed in the format `{namespace}.{extension}.{interface_name}.{version}`\n",
           "args": [],
           "ret": null
         }
@@ -31,7 +31,7 @@
     },
     {
       "name": "Root",
-      "docs": "\r\n     * Singleton with known id 0\r\n     * \r\n     * This is the only object that is known at the start of connection\r\n     * and is used to discover other objects\r\n     ",
+      "docs": "Singleton with known id 0\n\nThis is the only object that is known at the start of connection\nand is used to discover other objects\n",
       "version": [
         0,
         1,
@@ -40,7 +40,7 @@
       "methods": [
         {
           "name": "list_extensions",
-          "docs": " List the extensions implemented by the conected node ",
+          "docs": "List the extensions implemented by the conected node\n",
           "args": [],
           "ret": {
             "Array": {
@@ -50,7 +50,7 @@
         },
         {
           "name": "ping",
-          "docs": " Check the conection status ",
+          "docs": "Check the conection status\n",
           "args": [],
           "ret": null
         },
@@ -71,7 +71,7 @@
         },
         {
           "name": "get_object_by_name",
-          "docs": " Get the id of a singleton by the name of the interface ",
+          "docs": "Get the id of a singleton by the name of the interface\n",
           "args": [
             {
               "name": "name",
@@ -97,11 +97,11 @@
         1,
         0
       ],
-      "docs": " Delivers assets ",
+      "docs": "Delivers assets\n",
       "interfaces": [
         {
           "name": "asset_delivery",
-          "docs": " Singleton for asset delivery ",
+          "docs": "Singleton for asset delivery\n",
           "version": [
             0,
             1,
