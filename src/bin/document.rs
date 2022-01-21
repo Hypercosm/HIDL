@@ -64,7 +64,7 @@ fn document_extension(ext: &Extension, out: &Utf8Path) -> Result<Utf8PathBuf> {
     let mut f = fs::File::create(out.join(&file_name))?;
     let w = &mut f;
 
-    writeln!(w, "# Extension {}", ext.name)?;
+    writeln!(w, "# Extension `{}`", ext.name)?;
     write_version(w, ext.version)?;
     writeln!(w, "{}", ext.docs)?;
 
@@ -79,8 +79,8 @@ fn document_type(w: &mut dyn Write, ty: &TypeDef) -> Result<()> {
         w,
         "### {} `{}`",
         match ty.kind {
-            TypeKind::Struct(_) => "struct",
-            TypeKind::Enum(_) => "enum",
+            TypeKind::Struct(_) => "Struct",
+            TypeKind::Enum(_) => "Enum",
         },
         ty.name
     )?;
@@ -105,7 +105,7 @@ fn document_type(w: &mut dyn Write, ty: &TypeDef) -> Result<()> {
 
 // TODO: Merge document_interface and document_einterface
 fn document_interface(w: &mut dyn Write, i: &Interface) -> Result<()> {
-    writeln!(w, "### {}", i.name)?;
+    writeln!(w, "### Interface `{}`", i.name)?;
     write_version(w, i.version)?;
     writeln!(w, "{}", i.docs)?;
 
@@ -116,7 +116,7 @@ fn document_interface(w: &mut dyn Write, i: &Interface) -> Result<()> {
 }
 
 fn document_einterface(w: &mut dyn Write, i: &ExtensionInterface) -> Result<()> {
-    writeln!(w, "### {}", i.name)?;
+    writeln!(w, "### Interface `{}`", i.name)?;
     writeln!(w, "{}", i.docs)?;
 
     doc_all(w, document_func, &i.events, "#### Events")?;

@@ -1,10 +1,10 @@
-# Extension asset_delivery
+# Extension `asset_delivery`
 *v0.1.0*
 
 Delivers assets
 
 ## Interfaces
-### asset_delivery
+### Interface `asset_delivery`
 Singleton for asset delivery
 
 #### Events
@@ -24,7 +24,7 @@ Singleton for asset delivery
 ##### `get_id(name: string) -> uuid`
 
 ## Types
-### struct `Asset`
+### Struct `Asset`
  An asset: the type is given by TODO 
 - `id`: `uuid`
 - `name`: `string`

@@ -1,6 +1,6 @@
 # Hypercosm Protocol Docs
 ## Interfaces
-### Object
+### Interface `Object`
 *v1.0.0*
 
 The root interface, that all interfaces inherit from and
@@ -22,7 +22,7 @@ object ID must not be reused, we have plenty of them
 
 It is an error to remove the root singleton (id 0)
 
-### Root
+### Interface `Root`
 *v0.1.0*
 
 Singleton with known id 0
