@@ -1,14 +1,20 @@
 namespace hypercosm
 
+/**
+ * The root interface, that all interfaces inherit from and
+ * all objects implement
+ */ 
 interface Object {
-    /**
-     * The root interface, that all interfaces inherit from and
-     * all objects implement
-     */ 
-
     version 1 0 0
 
     methods {
+        /** 
+         * Get all interfaces implemented by an object
+         * 
+         * The interfaces will be listed in the format `{namespace}.{extension}.{interface_name}.{version}`
+         */
+        list_interfaces() -> []string
+
         /**
          * Remove the object from the object list 
          *
@@ -19,23 +25,17 @@ interface Object {
          *
          * It is an error to remove the root singleton (id 0)
          */
-        list_interfaces() -> []string
-        /** 
-         * Get all interfaces implemented by an object
-         * 
-         * The interfaces will be listed in the format `{namespace}.{extension}.{interface_name}.{version}`
-         */
         release()
     }
 }
 
+/**
+ * Singleton with known id 0
+ * 
+ * This is the only object that is known at the start of connection
+ * and is used to discover other objects
+ */
 interface Root {
-    /**
-     * Singleton with known id 0
-     * 
-     * This is the only object that is known at the start of connection
-     * and is used to discover other objects
-     */
     version 0 1 0
 
     methods {
@@ -50,11 +50,12 @@ interface Root {
     }
 }
 
+/** Delivers assets */ 
 extension asset_delivery {
-    /** Delivers assets */ 
     version 0 1 0
+
+    /** Singleton for asset delivery */
     interface {
-        /** Singleton for asset delivery */
         events {
             load_assets(assets: []Asset)
             unload_assets(assets:  []uuid)
@@ -69,8 +70,8 @@ extension asset_delivery {
         }
     }
     
+    /** An asset: the type is given by TODO */
     struct Asset {
-        /** An asset: the type is given by TODO */
         id: uuid
         name: string
         data: []u8
@@ -101,8 +102,8 @@ extension world {
         flags: EntityFlags
     }
 
+    /** This should be flags, but isnt yet */
     enum EntityFlags(vu64) {
-        /** This should be flags, but isnt yet */
         None = 0
         Interactable = 1
         Collidable = 2

@@ -12,59 +12,58 @@ match {
 
 pub Namespace: Namespace = {
     "namespace" <name:Ident> 
-    <interfaces:List<Interface>>
-    <types:List<TypeDef>>
-    <extensions:List<Extension>>
+    <interfaces:Interface*>
+    <types:TypeDef*>
+    <extensions:Extension*>
      => Namespace{<>}
 }
 
 Extension: Extension = {
-    "extension" <name:Ident> "{" 
-        <docs:Doc>
+    <docs:Doc> "extension" <name:Ident> "{" 
         <version:Version?>
         <interface:ImplicitInterface?>
-        <interfaces:List<ExtensionInterface>>
-        <types:List<TypeDef>>
-        "}"
+        <interfaces:ExtensionInterface*>
+        <types:TypeDef*>
+    "}"
          => Extension{docs, name, version: version.unwrap_or_default(), interface, interfaces, types}
 }
 
 Interface: Interface = { 
-    "interface" <name:Ident> "{" 
-    <docs:Doc>
-    <v:Version?> 
-    <e:Events?>
-    <m:Methods?>
+    <docs:Doc> "interface" <name:Ident> "{"
+        <v:Version?> 
+        <e:Events?>
+        <m:Methods?>
     "}" => Interface { name, docs, version: v.unwrap_or_default(), events: e.unwrap_or_default(), methods: m.unwrap_or_default() }
 }
 
 ExtensionInterface: ExtensionInterface = { 
-    "interface" <name:Ident> "{" 
-    <docs:Doc>
-    <version:Version?> 
-    <e:Events?>
-    <m:Methods?>
-    "}" => ExtensionInterface { name, docs, version, events: e.unwrap_or_default(), methods: m.unwrap_or_default() }
+    <docs:Doc> "interface" <name:Ident> "{" 
+        <version:Version?> 
+        <e:Events?>
+        <m:Methods?>
+    "}"
+        => ExtensionInterface { name, docs, version, events: e.unwrap_or_default(), methods: m.unwrap_or_default() }
 }
 
 ImplicitInterface: ImplicitInterface = {
-    "interface" "{"
-    <docs:Doc> 
-    <e:Events?>
-    <m:Methods?>
-    "}" => ImplicitInterface {  docs, events: e.unwrap_or_default(), methods: m.unwrap_or_default() }
+    <docs:Doc> "interface" "{"
+        <e:Events?>
+        <m:Methods?>
+    "}" 
+        => ImplicitInterface {  docs, events: e.unwrap_or_default(), methods: m.unwrap_or_default() }
 }
 
 Version: Version = {
     "version" <Num> <Num> <Num> => (<>)
 }
 
-Events: Vec<Func>  = { "events" "{" <List<Func>> "}" => <> }
-Methods: Vec<Func>  = { "methods" "{" <List<Func>> "}" => <> }
+Events: Vec<Func>  = { "events" "{" <Func*> "}" => <> }
+Methods: Vec<Func>  = { "methods" "{" <Func*> "}" => <> }
 
 Func: Func = {
     <docs:Doc>
-    <name:Ident> "(" <args: Comma<Arg>> ")" <ret:("->" <Type>)?> => Func{<>}
+    <name:Ident> "(" <args: Comma<Arg>> ")" <ret:("->" <Type>)?> 
+        => Func{<>}
 }
 
 
@@ -122,20 +121,18 @@ IntType: IntType = {
 // Typedefs
 
 TypeDef: TypeDef = {
-    "struct" <name:Ident>  "{" 
-    <docs:Doc> <fields:Struct>
-    "}"  => TypeDef{name, docs, kind: TypeKind::Struct(Struct{fields})},
-    "enum" <name:Ident> "(" <backing:IntType> ")" 
-    "{" <docs:Doc> <fields:Enum> "}"
+    <docs:Doc> "struct" <name:Ident>  "{" <fields:Struct> "}" 
+        => TypeDef{name, docs, kind: TypeKind::Struct(Struct{fields})},
+    <docs:Doc> "enum" <name:Ident> "(" <backing:IntType> ")" "{" <fields:Enum> "}"
         => TypeDef{name, docs, kind: TypeKind::Enum(Enum{fields, backing})},
 }
 
-Struct = { List<StructField> }
+Struct = { StructField* }
 StructField: StructField = {
     <name:Ident> ":" <ty:Type> => StructField{<>}
 }
 
-Enum = { List<EnumField> }
+Enum = { EnumField* }
 EnumField: EnumField = {
     <name:Ident> <value:("=" <Int>)?> => EnumField{<>}
 }
@@ -167,9 +164,10 @@ DocComment = { r"/\*[^*]*\*+(?:[^/*][^*]*\*+)*/" }
 
 // Combinators
 
-List<T>: Vec<T> = { 
-    <v:(<T>)*> => v
-};
+// Beware: https://github.com/lalrpop/lalrpop/issues/645
+// List<T>: Vec<T> = { 
+//     <v:(<T>)*> => v
+// };
 
 Comma<T>: Vec<T> = { 
     <v:(<T> ",")*> <e:T?> => match e {
