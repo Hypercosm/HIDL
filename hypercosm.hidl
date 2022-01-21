@@ -21,7 +21,7 @@ interface Object {
          * Future attempts to make calls on the object ID **MUST** fail.
          *
          * The resources associated with the object may be released, but the 
-         * object ID may not be reused, we have plenty of them
+         * object ID must not be reused, we have plenty of them
          *
          * It is an error to remove the root singleton (id 0)
          */
