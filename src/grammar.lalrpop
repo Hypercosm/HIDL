@@ -161,7 +161,9 @@ Doc: String  = { DocComment? => match <> {
     Some(doc) => doc[3..doc.len()-2].to_owned(),
     None => String::new()
 }}
-DocComment = { r"/\*\*(.|\n)*\*/" }
+// Regex from https://lalrpop.github.io/lalrpop/lexer_tutorial/001_lexer_gen.html
+// I dont know why it works
+DocComment = { r"/\*[^*]*\*+(?:[^/*][^*]*\*+)*/" }
 
 // Combinators
 

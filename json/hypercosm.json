@@ -3,7 +3,7 @@
   "interfaces": [
     {
       "name": "Object",
-      "docs": "",
+      "docs": "\r\n     * The root interface, that all interfaces inherit from and\r\n     * all objects implement\r\n     ",
       "version": [
         1,
         0,
@@ -12,7 +12,7 @@
       "methods": [
         {
           "name": "list_interfaces",
-          "docs": "",
+          "docs": "\r\n         * Remove the object from the object list \r\n         *\r\n         * Future attempts to make calls on the object ID **MUST** fail.\r\n         *\r\n         * The resources associated with the object may be released, but the \r\n         * object ID may not be reused, we have plenty of them\r\n         *\r\n         * It is an error to remove the root singleton (id 0)\r\n         ",
           "args": [],
           "ret": {
             "Array": {
@@ -22,7 +22,7 @@
         },
         {
           "name": "release",
-          "docs": "",
+          "docs": " \r\n         * Get all interfaces implemented by an object\r\n         * \r\n         * The interfaces will be listed in the format `{namespace}.{extension}.{interface_name}.{version}`\r\n         ",
           "args": [],
           "ret": null
         }
@@ -31,7 +31,7 @@
     },
     {
       "name": "Root",
-      "docs": "",
+      "docs": "\r\n     * Singleton with known id 0\r\n     * \r\n     * This is the only object that is known at the start of connection\r\n     * and is used to discover other objects\r\n     ",
       "version": [
         0,
         1,
@@ -40,7 +40,7 @@
       "methods": [
         {
           "name": "list_extensions",
-          "docs": "",
+          "docs": " List the extensions implemented by the conected node ",
           "args": [],
           "ret": {
             "Array": {
@@ -50,7 +50,7 @@
         },
         {
           "name": "ping",
-          "docs": "",
+          "docs": " Check the conection status ",
           "args": [],
           "ret": null
         },
@@ -71,7 +71,7 @@
         },
         {
           "name": "get_object_by_name",
-          "docs": "",
+          "docs": " Get the id of a singleton by the name of the interface ",
           "args": [
             {
               "name": "name",
@@ -97,11 +97,11 @@
         1,
         0
       ],
-      "docs": "",
+      "docs": " Delivers assets ",
       "interfaces": [
         {
           "name": "asset_delivery",
-          "docs": "",
+          "docs": " Singleton for asset delivery ",
           "version": [
             0,
             1,
@@ -229,7 +229,7 @@
       "types": [
         {
           "name": "Asset",
-          "docs": "",
+          "docs": " An asset: the type is given by TODO ",
           "kind": {
             "Struct": {
               "fields": [
@@ -381,7 +381,7 @@
         },
         {
           "name": "EntityFlags",
-          "docs": "",
+          "docs": " This should be flags, but isnt yet ",
           "kind": {
             "Enum": {
               "backing": "VU64",

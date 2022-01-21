@@ -1,28 +1,60 @@
 namespace hypercosm
 
 interface Object {
+    /**
+     * The root interface, that all interfaces inherit from and
+     * all objects implement
+     */ 
+
     version 1 0 0
 
     methods {
+        /**
+         * Remove the object from the object list 
+         *
+         * Future attempts to make calls on the object ID **MUST** fail.
+         *
+         * The resources associated with the object may be released, but the 
+         * object ID may not be reused, we have plenty of them
+         *
+         * It is an error to remove the root singleton (id 0)
+         */
         list_interfaces() -> []string
+        /** 
+         * Get all interfaces implemented by an object
+         * 
+         * The interfaces will be listed in the format `{namespace}.{extension}.{interface_name}.{version}`
+         */
         release()
     }
 }
 
 interface Root {
+    /**
+     * Singleton with known id 0
+     * 
+     * This is the only object that is known at the start of connection
+     * and is used to discover other objects
+     */
     version 0 1 0
 
     methods {
+        /** List the extensions implemented by the conected node */
         list_extensions() -> []string
+        /** Check the conection status */
         ping()
+        // TODO: What does this do
         get_object_by_id(id: uuid) -> object
+        /** Get the id of a singleton by the name of the interface */
         get_object_by_name(name: string) -> object
     }
 }
 
 extension asset_delivery {
+    /** Delivers assets */ 
     version 0 1 0
     interface {
+        /** Singleton for asset delivery */
         events {
             load_assets(assets: []Asset)
             unload_assets(assets:  []uuid)
@@ -38,6 +70,7 @@ extension asset_delivery {
     }
     
     struct Asset {
+        /** An asset: the type is given by TODO */
         id: uuid
         name: string
         data: []u8
@@ -69,6 +102,7 @@ extension world {
     }
 
     enum EntityFlags(vu64) {
+        /** This should be flags, but isnt yet */
         None = 0
         Interactable = 1
         Collidable = 2
