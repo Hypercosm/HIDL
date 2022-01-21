@@ -22,7 +22,7 @@
         },
         {
           "name": "release",
-          "docs": "Remove the object from the object list\n\nFuture attempts to make calls on the object ID **MUST** fail.\n\nThe resources associated with the object may be released, but the\nobject ID may not be reused, we have plenty of them\n\nIt is an error to remove the root singleton (id 0)\n",
+          "docs": "Remove the object from the object list\n\nFuture attempts to make calls on the object ID **MUST** fail.\n\nThe resources associated with the object may be released, but the\nobject ID must not be reused, we have plenty of them\n\nIt is an error to remove the root singleton (id 0)\n",
           "args": [],
           "ret": null
         }
@@ -177,7 +177,7 @@
               }
             },
             {
-              "name": "getId",
+              "name": "get_id",
               "docs": "",
               "args": [
                 {
@@ -248,9 +248,7 @@
                 {
                   "name": "data",
                   "ty": {
-                    "Array": {
-                      "IntType": "U8"
-                    }
+                    "Primitive": "Bytes"
                   }
                 }
               ]
@@ -352,7 +350,7 @@
             "Struct": {
               "fields": [
                 {
-                  "name": "assetId",
+                  "name": "asset_id",
                   "ty": {
                     "Primitive": "Uuid"
                   }
@@ -424,7 +422,7 @@
               "docs": "",
               "args": [
                 {
-                  "name": "assetId",
+                  "name": "asset_id",
                   "ty": {
                     "Primitive": "Uuid"
                   }
@@ -452,7 +450,7 @@
               "docs": "",
               "args": [
                 {
-                  "name": "assetId",
+                  "name": "asset_id",
                   "ty": {
                     "Primitive": "Uuid"
                   }

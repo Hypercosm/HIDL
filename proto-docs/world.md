@@ -24,7 +24,7 @@
 ## Types
 ### struct `EntityInfo`
 
-- `assetId`: `uuid`
+- `asset_id`: `uuid`
 - `entity`: `Entity`
 - `transformation`: `matrix4x4`
 - `flags`: `EntityFlags`

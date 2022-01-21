@@ -8,9 +8,9 @@
 
 
 #### Methods
-##### `load_wasm_module(assetId: uuid, exports: [string]string) -> vu64`
+##### `load_wasm_module(asset_id: uuid, exports: [string]string) -> vu64`
 
-##### `load_lua_script(assetId: uuid) -> vu64`
+##### `load_lua_script(asset_id: uuid) -> vu64`
 
 ##### `load_inline_lua_script(script: string) -> vu64`
 

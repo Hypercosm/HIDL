@@ -23,11 +23,11 @@ Singleton for asset delivery
 
 ##### `fetch_by_names(names: []string) -> []Asset`
 
-##### `getId(name: string) -> uuid`
+##### `get_id(name: string) -> uuid`
 
 ## Types
 ### struct `Asset`
  An asset: the type is given by TODO 
 - `id`: `uuid`
 - `name`: `string`
-- `data`: `[]u8`
+- `data`: `bytes`

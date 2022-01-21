@@ -6,6 +6,7 @@
 //! - Docs have been striped with the [`doc`] module
 
 // TODO: At some point make HIR a different type to AST
+// TODO: Lint agains []u8, suggest bytes
 
 use std::collections::BTreeSet;
 
