@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -167,4 +169,54 @@ fn always_none<T>(x: &Option<T>) -> bool {
 fn always_some<T>(x: &Option<T>) -> bool {
     assert!(x.is_some());
     true
+}
+
+impl Display for Type {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Type::Primitive(p) => p.fmt(f),
+            Type::Custom(n) => n.fmt(f),
+            Type::Array(t) => write!(f, "[]{}", t),
+            Type::Dictionary(d) => write!(f, "[{}]{}", d.key, d.value),
+            Type::IntType(i) => i.fmt(f),
+        }
+    }
+}
+
+impl Display for PrimType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            PrimType::String => "string",
+            PrimType::Object => "object",
+            PrimType::Uuid => "uuid",
+            PrimType::Bytes => "bytes",
+            PrimType::Bool => "bool",
+            PrimType::Matrix4x4 => "matrix4x4",
+            PrimType::F32 => "f32",
+            PrimType::F64 => "f64",
+        })
+    }
+}
+
+impl Display for IntType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            IntType::U8 => "u8",
+            IntType::U16 => "u16",
+            IntType::U32 => "u32",
+            IntType::U64 => "u64",
+            IntType::VU8 => "vu8",
+            IntType::VU16 => "vu16",
+            IntType::VU32 => "vu32",
+            IntType::VU64 => "vu64",
+            IntType::I8 => "i8",
+            IntType::I16 => "i16",
+            IntType::I32 => "i32",
+            IntType::I64 => "i64",
+            IntType::VI8 => "vi8",
+            IntType::VI16 => "vi16",
+            IntType::VI32 => "vi32",
+            IntType::VI64 => "vi64",
+        })
+    }
 }
