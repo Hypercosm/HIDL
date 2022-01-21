@@ -41,27 +41,18 @@ fn main() -> Result<()> {
 
 fn document(tree: &Namespace, out: &Utf8Path) -> Result<()> {
     let mut f = fs::File::create(out.join("README.md"))?;
-    writeln!(f, "# Hypercosm Protocol Docs")?;
 
-    if !tree.interfaces.is_empty() {
-        writeln!(f, "## Interfaces")?;
-        for i in &tree.interfaces {
-            document_interface(&mut f, i)?;
-        }
-    }
+    let w = &mut f;
+    writeln!(w, "# Hypercosm Protocol Docs")?;
 
-    if !tree.types.is_empty() {
-        writeln!(f, "## Types")?;
-        for i in &tree.types {
-            document_type(&mut f, i)?;
-        }
-    }
+    doc_all(w, document_interface, &tree.interfaces, "## Interfaces")?;
+    doc_all(w, document_type, &tree.types, "## Types")?;
 
     if !tree.extensions.is_empty() {
-        writeln!(f, "## Extensions")?;
+        writeln!(w, "## Extensions")?;
         for i in &tree.extensions {
             let fname = document_extension(i, out)?;
-            writeln!(f, "- [{}]({})", i.name, fname)?;
+            writeln!(w, "- [{}]({})", i.name, fname)?;
         }
     }
     Ok(())
@@ -71,32 +62,21 @@ fn document_extension(ext: &Extension, out: &Utf8Path) -> Result<Utf8PathBuf> {
     let file_name = Utf8PathBuf::from(&ext.name).with_extension("md");
 
     let mut f = fs::File::create(out.join(&file_name))?;
+    let w = &mut f;
 
-    writeln!(f, "# Extension {}", ext.name)?;
-    write_version(&mut f, ext.version)?;
+    writeln!(w, "# Extension {}", ext.name)?;
+    write_version(w, ext.version)?;
+    writeln!(w, "{}", ext.docs)?;
 
-    writeln!(f, "{}", ext.docs)?;
-
-    if !ext.interfaces.is_empty() {
-        writeln!(f, "## Interfaces")?;
-        for i in &ext.interfaces {
-            document_einterface(&mut f, i)?;
-        }
-    }
-
-    if !ext.types.is_empty() {
-        writeln!(f, "## Types")?;
-        for i in &ext.types {
-            document_type(&mut f, i)?;
-        }
-    }
+    doc_all(w, document_einterface, &ext.interfaces, "## Interfaces")?;
+    doc_all(w, document_type, &ext.types, "## Types")?;
 
     Ok(file_name)
 }
 
-fn document_type(f: &mut dyn Write, ty: &TypeDef) -> Result<()> {
+fn document_type(w: &mut dyn Write, ty: &TypeDef) -> Result<()> {
     writeln!(
-        f,
+        w,
         "### {} `{}`",
         match ty.kind {
             TypeKind::Struct(_) => "struct",
@@ -105,17 +85,17 @@ fn document_type(f: &mut dyn Write, ty: &TypeDef) -> Result<()> {
         ty.name
     )?;
 
-    writeln!(f, "{}", ty.docs)?;
+    writeln!(w, "{}", ty.docs)?;
 
     match &ty.kind {
         TypeKind::Struct(s) => {
             for field in &s.fields {
-                writeln!(f, "- `{}`: `{}`", field.name, field.ty)?;
+                writeln!(w, "- `{}`: `{}`", field.name, field.ty)?;
             }
         }
         TypeKind::Enum(e) => {
             for field in &e.fields {
-                writeln!(f, "- `{}`", field.name)?;
+                writeln!(w, "- `{}`", field.name)?;
             }
         }
     }
@@ -124,59 +104,35 @@ fn document_type(f: &mut dyn Write, ty: &TypeDef) -> Result<()> {
 }
 
 // TODO: Merge document_interface and document_einterface
-fn document_interface(f: &mut dyn Write, i: &Interface) -> Result<()> {
-    writeln!(f, "### {}", i.name)?;
-    write_version(f, i.version)?;
-    writeln!(f, "{}", i.docs)?;
+fn document_interface(w: &mut dyn Write, i: &Interface) -> Result<()> {
+    writeln!(w, "### {}", i.name)?;
+    write_version(w, i.version)?;
+    writeln!(w, "{}", i.docs)?;
 
-    if !i.events.is_empty() {
-        writeln!(f, "#### Events")?;
-        for e in &i.events {
-            document_func(f, e)?;
-        }
-    }
-
-    if !i.methods.is_empty() {
-        writeln!(f, "#### Methods")?;
-        for m in &i.methods {
-            document_func(f, m)?;
-        }
-    }
+    doc_all(w, document_func, &i.events, "#### Events")?;
+    doc_all(w, document_func, &i.methods, "#### Methods")?;
 
     Ok(())
 }
 
-fn document_einterface(f: &mut dyn Write, i: &ExtensionInterface) -> Result<()> {
-    writeln!(f, "### {}", i.name)?;
+fn document_einterface(w: &mut dyn Write, i: &ExtensionInterface) -> Result<()> {
+    writeln!(w, "### {}", i.name)?;
 
     if let Some(version) = i.version {
-        write_version(f, version)?;
+        write_version(w, version)?;
     }
 
-    writeln!(f, "{}", i.docs)?;
+    writeln!(w, "{}", i.docs)?;
 
-    if !i.events.is_empty() {
-        writeln!(f, "#### Events")?;
-        for e in &i.events {
-            document_func(f, e)?;
-        }
-    }
-
-    if !i.methods.is_empty() {
-        writeln!(f, "#### Methods")?;
-        for m in &i.methods {
-            document_func(f, m)?;
-        }
-    }
+    doc_all(w, document_func, &i.events, "#### Events")?;
+    doc_all(w, document_func, &i.methods, "#### Methods")?;
 
     Ok(())
 }
 
 fn document_func(w: &mut dyn Write, f: &Func) -> Result<()> {
     write!(w, "##### `{}(", f.name)?;
-    // TODO: Link to type?
-    // TODO: No trailing comma
-
+    // TODO: Link to types
     if let [args @ .., larg] = &f.args[..] {
         for arg in args {
             write!(w, "{}: {}, ", arg.name, arg.ty)?;
@@ -195,6 +151,22 @@ fn document_func(w: &mut dyn Write, f: &Func) -> Result<()> {
     Ok(())
 }
 
-fn write_version(f: &mut dyn Write, v: Version) -> io::Result<()> {
-    writeln!(f, "*v{}.{}.{}*\n", v.0, v.1, v.2)
+fn doc_all<T, F: Fn(&mut dyn Write, &T) -> Result<()>>(
+    w: &mut dyn Write,
+    f: F,
+    items: &[T],
+
+    name: &str,
+) -> Result<()> {
+    if !items.is_empty() {
+        writeln!(w, "{}", name)?;
+        for i in items {
+            f(w, i)?;
+        }
+    }
+    Ok(())
+}
+
+fn write_version(w: &mut dyn Write, v: Version) -> io::Result<()> {
+    writeln!(w, "*v{}.{}.{}*\n", v.0, v.1, v.2)
 }

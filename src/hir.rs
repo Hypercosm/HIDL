@@ -115,6 +115,7 @@ fn lower_enum(Enum { backing, fields }: Enum) -> Enum {
     let mut new_fields = Vec::with_capacity(fields.len());
 
     for EnumField { name, value } in fields {
+        // TODO: I think this is broken
         let value = value.unwrap_or(pos);
 
         if seen.contains(&value) {
