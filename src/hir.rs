@@ -30,6 +30,7 @@ pub fn lower_namespace(
 fn lower_extension(
     Extension {
         name,
+        docs,
         version,
         interface,
         interfaces,
@@ -49,6 +50,7 @@ fn lower_extension(
 
     Extension {
         name,
+        docs,
         version,
         interface: None,
         interfaces: new_interfaces,
@@ -63,6 +65,7 @@ fn lower_implicit_interface(
 ) -> ExtensionInterface {
     ExtensionInterface {
         name: name.to_owned(),
+        docs: i.docs,
         version: Some(version),
         methods: i.methods,
         events: i.events,
@@ -72,14 +75,16 @@ fn lower_implicit_interface(
 fn lower_extension_interface(i: ExtensionInterface, version: Version) -> ExtensionInterface {
     ExtensionInterface {
         name: i.name,
+        docs: i.docs,
         version: Some(i.version.unwrap_or(version)),
         methods: i.methods,
         events: i.events,
     }
 }
-fn lower_type_def(TypeDef { name, kind }: TypeDef) -> TypeDef {
+fn lower_type_def(TypeDef { name, kind, docs }: TypeDef) -> TypeDef {
     TypeDef {
         name,
+        docs,
         kind: match kind {
             TypeKind::Struct(_) => kind,
             TypeKind::Enum(e) => TypeKind::Enum(lower_enum(e)),

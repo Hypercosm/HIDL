@@ -20,35 +20,39 @@ pub Namespace: Namespace = {
 
 Extension: Extension = {
     "extension" <name:Ident> "{" 
+        <docs:Doc>
         <version:Version?>
         <interface:ImplicitInterface?>
         <interfaces:List<ExtensionInterface>>
         <types:List<TypeDef>>
         "}"
-         => Extension{name, version: version.unwrap_or_default(), interface, interfaces, types}
+         => Extension{docs, name, version: version.unwrap_or_default(), interface, interfaces, types}
 }
 
 Interface: Interface = { 
     "interface" <name:Ident> "{" 
+    <docs:Doc>
     <v:Version?> 
     <e:Events?>
     <m:Methods?>
-    "}" => Interface { name, version: v.unwrap_or_default(), events: e.unwrap_or_default(), methods: m.unwrap_or_default() }
+    "}" => Interface { name, docs, version: v.unwrap_or_default(), events: e.unwrap_or_default(), methods: m.unwrap_or_default() }
 }
 
 ExtensionInterface: ExtensionInterface = { 
     "interface" <name:Ident> "{" 
+    <docs:Doc>
     <version:Version?> 
     <e:Events?>
     <m:Methods?>
-    "}" => ExtensionInterface { name, version, events: e.unwrap_or_default(), methods: m.unwrap_or_default() }
+    "}" => ExtensionInterface { name, docs, version, events: e.unwrap_or_default(), methods: m.unwrap_or_default() }
 }
 
-ImplicitInterface: ImplicitInterface = { 
+ImplicitInterface: ImplicitInterface = {
     "interface" "{"
+    <docs:Doc> 
     <e:Events?>
     <m:Methods?>
-    "}" => ImplicitInterface {  events: e.unwrap_or_default(), methods: m.unwrap_or_default() }
+    "}" => ImplicitInterface {  docs, events: e.unwrap_or_default(), methods: m.unwrap_or_default() }
 }
 
 Version: Version = {
@@ -59,6 +63,7 @@ Events: Vec<Func>  = { "events" "{" <List<Func>> "}" => <> }
 Methods: Vec<Func>  = { "methods" "{" <List<Func>> "}" => <> }
 
 Func: Func = {
+    <docs:Doc>
     <name:Ident> "(" <args: Comma<Arg>> ")" <ret:("->" <Type>)?> => Func{<>}
 }
 
@@ -117,17 +122,20 @@ IntType: IntType = {
 // Typedefs
 
 TypeDef: TypeDef = {
-    "struct" <name:Ident> <s:Struct>  => TypeDef{name, kind: TypeKind::Struct(s)},
-    "enum" <name:Ident> "(" <backing:IntType> ")" <fields:Enum> 
-        => TypeDef{name, kind: TypeKind::Enum(Enum{fields, backing})},
+    "struct" <name:Ident>  "{" 
+    <docs:Doc> <fields:Struct>
+    "}"  => TypeDef{name, docs, kind: TypeKind::Struct(Struct{fields})},
+    "enum" <name:Ident> "(" <backing:IntType> ")" 
+    "{" <docs:Doc> <fields:Enum> "}"
+        => TypeDef{name, docs, kind: TypeKind::Enum(Enum{fields, backing})},
 }
 
-Struct: Struct = { "{" <fields:List<StructField>> "}"  => Struct{<>} }
+Struct = { List<StructField> }
 StructField: StructField = {
     <name:Ident> ":" <ty:Type> => StructField{<>}
 }
 
-Enum: Vec<EnumField> = { "{" <List<EnumField>> "}"  => <> }
+Enum = { List<EnumField> }
 EnumField: EnumField = {
     <name:Ident> <value:("=" <Int>)?> => EnumField{<>}
 }
@@ -148,6 +156,12 @@ Int: i64 = {
 }
 Ident: String = { r"[a-zA-Z][a-zA-Z0-9_]*" => <>.to_owned() }
 
+
+Doc: String  = { DocComment? => match <> {
+    Some(doc) => doc[3..doc.len()-2].to_owned(),
+    None => String::new()
+}}
+DocComment = { r"/\*\*(.|\n)*\*/" }
 
 // Combinators
 

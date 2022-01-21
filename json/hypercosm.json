@@ -3,6 +3,7 @@
   "interfaces": [
     {
       "name": "Object",
+      "docs": "",
       "version": [
         1,
         0,
@@ -11,6 +12,7 @@
       "methods": [
         {
           "name": "list_interfaces",
+          "docs": "",
           "args": [],
           "ret": {
             "Array": {
@@ -20,6 +22,7 @@
         },
         {
           "name": "release",
+          "docs": "",
           "args": [],
           "ret": null
         }
@@ -28,6 +31,7 @@
     },
     {
       "name": "Root",
+      "docs": "",
       "version": [
         0,
         1,
@@ -36,6 +40,7 @@
       "methods": [
         {
           "name": "list_extensions",
+          "docs": "",
           "args": [],
           "ret": {
             "Array": {
@@ -45,11 +50,13 @@
         },
         {
           "name": "ping",
+          "docs": "",
           "args": [],
           "ret": null
         },
         {
           "name": "get_object_by_id",
+          "docs": "",
           "args": [
             {
               "name": "id",
@@ -64,6 +71,7 @@
         },
         {
           "name": "get_object_by_name",
+          "docs": "",
           "args": [
             {
               "name": "name",
@@ -89,9 +97,11 @@
         1,
         0
       ],
+      "docs": "",
       "interfaces": [
         {
           "name": "asset_delivery",
+          "docs": "",
           "version": [
             0,
             1,
@@ -100,6 +110,7 @@
           "methods": [
             {
               "name": "fetch_by_id",
+              "docs": "",
               "args": [
                 {
                   "name": "id",
@@ -114,6 +125,7 @@
             },
             {
               "name": "fetch_by_name",
+              "docs": "",
               "args": [
                 {
                   "name": "name",
@@ -128,6 +140,7 @@
             },
             {
               "name": "fetch_by_ids",
+              "docs": "",
               "args": [
                 {
                   "name": "ids",
@@ -146,6 +159,7 @@
             },
             {
               "name": "fetch_by_names",
+              "docs": "",
               "args": [
                 {
                   "name": "names",
@@ -164,6 +178,7 @@
             },
             {
               "name": "getId",
+              "docs": "",
               "args": [
                 {
                   "name": "name",
@@ -180,6 +195,7 @@
           "events": [
             {
               "name": "load_assets",
+              "docs": "",
               "args": [
                 {
                   "name": "assets",
@@ -194,6 +210,7 @@
             },
             {
               "name": "unload_assets",
+              "docs": "",
               "args": [
                 {
                   "name": "assets",
@@ -212,6 +229,7 @@
       "types": [
         {
           "name": "Asset",
+          "docs": "",
           "kind": {
             "Struct": {
               "fields": [
@@ -248,9 +266,11 @@
         1,
         0
       ],
+      "docs": "",
       "interfaces": [
         {
           "name": "world",
+          "docs": "",
           "version": [
             0,
             1,
@@ -260,6 +280,7 @@
           "events": [
             {
               "name": "add_entities",
+              "docs": "",
               "args": [
                 {
                   "name": "entities",
@@ -274,6 +295,7 @@
             },
             {
               "name": "update_entities",
+              "docs": "",
               "args": [
                 {
                   "name": "entities",
@@ -288,6 +310,7 @@
             },
             {
               "name": "remove_entities",
+              "docs": "",
               "args": [
                 {
                   "name": "entities",
@@ -304,6 +327,7 @@
         },
         {
           "name": "Entity",
+          "docs": "",
           "version": [
             0,
             1,
@@ -312,6 +336,7 @@
           "methods": [
             {
               "name": "interact",
+              "docs": "",
               "args": [],
               "ret": null
             }
@@ -322,6 +347,7 @@
       "types": [
         {
           "name": "EntityInfo",
+          "docs": "",
           "kind": {
             "Struct": {
               "fields": [
@@ -355,21 +381,19 @@
         },
         {
           "name": "EntityFlags",
+          "docs": "",
           "kind": {
             "Enum": {
               "backing": "VU64",
               "fields": [
                 {
-                  "name": "None",
-                  "value": 0
+                  "name": "None"
                 },
                 {
-                  "name": "Interactable",
-                  "value": 1
+                  "name": "Interactable"
                 },
                 {
-                  "name": "Collidable",
-                  "value": 2
+                  "name": "Collidable"
                 }
               ]
             }
@@ -384,9 +408,11 @@
         1,
         0
       ],
+      "docs": "",
       "interfaces": [
         {
           "name": "execution_context",
+          "docs": "",
           "version": [
             0,
             1,
@@ -395,6 +421,7 @@
           "methods": [
             {
               "name": "load_wasm_module",
+              "docs": "",
               "args": [
                 {
                   "name": "assetId",
@@ -422,6 +449,7 @@
             },
             {
               "name": "load_lua_script",
+              "docs": "",
               "args": [
                 {
                   "name": "assetId",
@@ -436,6 +464,7 @@
             },
             {
               "name": "load_inline_lua_script",
+              "docs": "",
               "args": [
                 {
                   "name": "script",
@@ -450,6 +479,7 @@
             },
             {
               "name": "begin_execution",
+              "docs": "",
               "args": [
                 {
                   "name": "module_or_script",
@@ -468,6 +498,7 @@
             },
             {
               "name": "begin_inline_lua_execution",
+              "docs": "",
               "args": [
                 {
                   "name": "script",

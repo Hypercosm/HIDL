@@ -13,6 +13,7 @@ pub struct Namespace {
 pub struct Extension {
     pub name: String,
     pub version: Version,
+    pub docs: String,
     #[serde(default, skip_serializing_if = "always_none")]
     pub interface: Option<ImplicitInterface>,
     pub interfaces: Vec<ExtensionInterface>,
@@ -23,6 +24,7 @@ pub struct Extension {
 
 pub struct Interface {
     pub name: String,
+    pub docs: String,
     pub version: Version,
     pub methods: Vec<Func>,
     pub events: Vec<Func>,
@@ -31,6 +33,7 @@ pub struct Interface {
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ImplicitInterface {
     // Gets version and name from extension
+    pub docs: String,
     pub methods: Vec<Func>,
     pub events: Vec<Func>,
 }
@@ -38,6 +41,7 @@ pub struct ImplicitInterface {
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ExtensionInterface {
     pub name: String,
+    pub docs: String,
     // In HIR, may get version from extension
     //
     // TODO: Assert is present during (de)serialization
@@ -51,6 +55,7 @@ pub type Version = (u8, u8, u8);
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Func {
     pub name: String,
+    pub docs: String,
     pub args: Vec<Arg>,
     pub ret: Option<Type>,
 }
@@ -117,11 +122,11 @@ pub struct Arg {
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TypeDef {
     pub name: String,
+    pub docs: String,
     pub kind: TypeKind,
 }
 
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
-
 pub enum TypeKind {
     Struct(Struct),
     Enum(Enum),
@@ -135,7 +140,9 @@ pub struct Enum {
 
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct EnumField {
+    // TODO: Should we allow docs on fields
     pub name: String,
+    #[serde(default, skip_serializing_if = "always_some")]
     pub value: Option<i64>,
 }
 
@@ -146,6 +153,7 @@ pub struct Struct {
 
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct StructField {
+    // TODO: Should we allow docs on fields
     pub name: String,
     pub ty: Type,
 }
@@ -153,5 +161,10 @@ pub struct StructField {
 fn always_none<T>(x: &Option<T>) -> bool {
     // assert_matches!(x, None);
     assert!(x.is_none());
+    true
+}
+
+fn always_some<T>(x: &Option<T>) -> bool {
+    assert!(x.is_some());
     true
 }
