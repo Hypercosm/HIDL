@@ -102,11 +102,6 @@
         {
           "name": "asset_delivery",
           "docs": "Singleton for asset delivery\n",
-          "version": [
-            0,
-            1,
-            0
-          ],
           "methods": [
             {
               "name": "fetch_by_id",
@@ -269,11 +264,6 @@
         {
           "name": "world",
           "docs": "",
-          "version": [
-            0,
-            1,
-            0
-          ],
           "methods": [],
           "events": [
             {
@@ -326,11 +316,6 @@
         {
           "name": "Entity",
           "docs": "",
-          "version": [
-            0,
-            1,
-            0
-          ],
           "methods": [
             {
               "name": "interact",
@@ -411,11 +396,6 @@
         {
           "name": "execution_context",
           "docs": "",
-          "version": [
-            0,
-            1,
-            0
-          ],
           "methods": [
             {
               "name": "load_wasm_module",

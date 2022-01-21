@@ -1,8 +1,7 @@
 //! Hir has the same types as ast, but with the following invarients:
 //!
 //! - All enum variants have a number
-//! - The implicit interface is None
-//! - All interfaces have a version
+//! - Extensions implicit interface has been moved into interfaces list
 //! - Docs have been striped with the [`doc`] module
 
 // TODO: At some point make HIR a different type to AST
@@ -13,7 +12,7 @@ use std::collections::BTreeSet;
 use crate::{
     ast::{
         Enum, EnumField, Extension, ExtensionInterface, Func, ImplicitInterface, Interface,
-        Namespace, TypeDef, TypeKind, Version,
+        Namespace, TypeDef, TypeKind,
     },
     docs,
 };
@@ -46,14 +45,10 @@ fn lower_extension(
 ) -> Extension {
     let mut new_interfaces = interface
         .into_iter()
-        .map(|l| lower_implicit_interface(l, &name, version))
+        .map(|l| lower_implicit_interface(l, &name))
         .collect::<Vec<_>>();
 
-    new_interfaces.extend(
-        interfaces
-            .into_iter()
-            .map(|l| lower_extension_interface(l, version)),
-    );
+    new_interfaces.extend(interfaces.into_iter().map(lower_extension_interface));
 
     Extension {
         name,
@@ -75,25 +70,19 @@ fn lower_interface(i: Interface) -> Interface {
     }
 }
 
-fn lower_implicit_interface(
-    i: ImplicitInterface,
-    name: &str,
-    version: Version,
-) -> ExtensionInterface {
+fn lower_implicit_interface(i: ImplicitInterface, name: &str) -> ExtensionInterface {
     ExtensionInterface {
         name: name.to_owned(),
         docs: docs::lower(&i.docs),
-        version: Some(version),
         methods: vmap(i.methods, lower_func),
         events: vmap(i.events, lower_func),
     }
 }
 
-fn lower_extension_interface(i: ExtensionInterface, version: Version) -> ExtensionInterface {
+fn lower_extension_interface(i: ExtensionInterface) -> ExtensionInterface {
     ExtensionInterface {
         name: i.name,
         docs: docs::lower(&i.docs),
-        version: Some(i.version.unwrap_or(version)),
         methods: vmap(i.methods, lower_func),
         events: vmap(i.events, lower_func),
     }

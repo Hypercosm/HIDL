@@ -117,11 +117,6 @@ fn document_interface(w: &mut dyn Write, i: &Interface) -> Result<()> {
 
 fn document_einterface(w: &mut dyn Write, i: &ExtensionInterface) -> Result<()> {
     writeln!(w, "### {}", i.name)?;
-
-    if let Some(version) = i.version {
-        write_version(w, version)?;
-    }
-
     writeln!(w, "{}", i.docs)?;
 
     doc_all(w, document_func, &i.events, "#### Events")?;

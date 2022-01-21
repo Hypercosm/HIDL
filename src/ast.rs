@@ -44,10 +44,6 @@ pub struct ImplicitInterface {
 pub struct ExtensionInterface {
     pub name: String,
     pub docs: String,
-    // In HIR, may get version from extension
-    //
-    // TODO: Assert is present during (de)serialization
-    pub version: Option<Version>,
     pub methods: Vec<Func>,
     pub events: Vec<Func>,
 }

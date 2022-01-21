@@ -20,12 +20,12 @@ pub Namespace: Namespace = {
 
 Extension: Extension = {
     <docs:Doc> "extension" <name:Ident> "{" 
-        <version:Version?>
+        <version:Version>
         <interface:ImplicitInterface?>
         <interfaces:ExtensionInterface*>
         <types:TypeDef*>
     "}"
-         => Extension{docs, name, version: version.unwrap_or_default(), interface, interfaces, types}
+         => Extension{<>}
 }
 
 Interface: Interface = { 
@@ -38,11 +38,10 @@ Interface: Interface = {
 
 ExtensionInterface: ExtensionInterface = { 
     <docs:Doc> "interface" <name:Ident> "{" 
-        <version:Version?> 
         <e:Events?>
         <m:Methods?>
     "}"
-        => ExtensionInterface { name, docs, version, events: e.unwrap_or_default(), methods: m.unwrap_or_default() }
+        => ExtensionInterface { name, docs, events: e.unwrap_or_default(), methods: m.unwrap_or_default() }
 }
 
 ImplicitInterface: ImplicitInterface = {

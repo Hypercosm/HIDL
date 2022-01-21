@@ -5,8 +5,6 @@ Delivers assets
 
 ## Interfaces
 ### asset_delivery
-*v0.1.0*
-
 Singleton for asset delivery
 
 #### Events
