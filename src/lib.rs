@@ -11,3 +11,4 @@ lalrpop_util::lalrpop_mod!(
 pub mod ast;
 mod docs;
 pub mod hir;
+pub mod vfs;

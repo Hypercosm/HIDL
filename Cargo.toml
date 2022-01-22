@@ -11,6 +11,7 @@ camino = "1.0.7"
 debug2 = { git = "https://github.com/aDotInTheVoid/debug2/" }
 fs-err = "2.6.0"
 heck = "0.4.0"
+is_ci = "1.1.1"
 lalrpop-util = { version = "0.19.6", features = ["lexer"] }
 lalrpop_codespan = { git = "https://gitea.treehouse.systems/aDot/lalrpop_codespan" }
 serde = { version = "1.0.133", features = ["derive"] }

@@ -1,5 +1,9 @@
+use std::io::Write;
+
 use anyhow::{ensure, Result};
 use fs_err as fs;
+
+use hidl::vfs;
 
 fn main() -> Result<()> {
     let args = std::env::args().collect::<Vec<_>>();
@@ -17,7 +21,11 @@ fn main() -> Result<()> {
 
     let tree_json = serde_json::to_string_pretty(&tree)?;
 
-    fs::write(&args[2], tree_json)?;
+    // TODO: Convenience methods in VFS
+    let mut vfs = vfs::FS::new();
+    let file = vfs.open(&args[2]);
+    file.write_all(tree_json.as_bytes())?;
+    vfs.save()?;
 
     Ok(())
 }

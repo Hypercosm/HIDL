@@ -4,8 +4,9 @@ use anyhow::{bail, ensure, Result};
 use camino::{Utf8Path, Utf8PathBuf};
 use fs_err as fs;
 use heck::ToTitleCase;
-use hidl::ast::{
-    Extension, ExtensionInterface, Func, Interface, Namespace, TypeDef, TypeKind, Version,
+use hidl::{
+    ast::{Extension, ExtensionInterface, Func, Interface, Namespace, TypeDef, TypeKind, Version},
+    vfs::{self, File},
 };
 
 fn main() -> Result<()> {
@@ -41,9 +42,11 @@ fn main() -> Result<()> {
 }
 
 fn document(tree: &Namespace, out: &Utf8Path) -> Result<()> {
-    let mut f = fs::File::create(out.join("README.md"))?;
+    let mut fs = hidl::vfs::FS::new();
 
-    let w = &mut f;
+    // let w = fs.open();
+    let mut readme = File::new();
+    let w = &mut readme;
 
     let mut pages = vec![];
 
@@ -57,26 +60,29 @@ fn document(tree: &Namespace, out: &Utf8Path) -> Result<()> {
     if !tree.extensions.is_empty() {
         writeln!(w, "## Extensions")?;
         for i in &tree.extensions {
-            let fname = document_extension(i, out)?;
+            let fname = document_extension(i, out, &mut fs)?;
             writeln!(w, "- [{}]({})", i.name, &fname)?;
             pages.push((i.name.to_title_case(), fname.into_string()));
         }
     }
 
-    let mut sumarry = fs::File::create(out.join("SUMMARY.md"))?;
+    let sumarry = fs.open(out.join("SUMMARY.md"));
 
     for (title, link) in pages {
         writeln!(sumarry, "- [{}]({})", title, link)?;
     }
 
+    fs.add_file(readme, out.join("README.md"));
+
+    fs.save()?;
+
     Ok(())
 }
 
-fn document_extension(ext: &Extension, out: &Utf8Path) -> Result<Utf8PathBuf> {
+fn document_extension(ext: &Extension, out: &Utf8Path, fs: &mut vfs::FS) -> Result<Utf8PathBuf> {
     let file_name = Utf8PathBuf::from(&ext.name).with_extension("md");
 
-    let mut f = fs::File::create(out.join(&file_name))?;
-    let w = &mut f;
+    let w = fs.open(out.join(&file_name));
 
     writeln!(w, "# Extension `{}`", ext.name)?;
     write_version(w, ext.version)?;

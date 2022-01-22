@@ -225,6 +225,7 @@ dependencies = [
  "debug2",
  "fs-err",
  "heck",
+ "is_ci",
  "lalrpop",
  "lalrpop-util",
  "lalrpop_codespan",
@@ -251,6 +252,12 @@ checksum = "7a5bbe824c507c5da5956355e86a746d82e0e1464f65d862cc5e71da70e94b2c"
 dependencies = [
  "cfg-if",
 ]
+
+[[package]]
+name = "is_ci"
+version = "1.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "616cde7c720bb2bb5824a224687d8f77bfd38922027f01d825cd7453be5099fb"
 
 [[package]]
 name = "itertools"
