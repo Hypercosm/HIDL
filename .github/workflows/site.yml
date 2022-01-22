@@ -24,3 +24,11 @@ jobs:
 
       - name: Run mdbook
         run: mdbook build
+
+      - name: Deploy site
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./_book_out
+          force_orphan: true
