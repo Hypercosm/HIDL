@@ -123,7 +123,3 @@ extension execution_context {
         }
     }
 }
-
-extension test {
-    version 0 0 0
-}
