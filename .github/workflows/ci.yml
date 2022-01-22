@@ -34,6 +34,18 @@ jobs:
           command: test
 
       - uses: actions-rs/cargo@v1
+        name: Check JSON
+        with:
+          command: run
+          args: --bin generate -- hypercosm.hidl json/hypercosm.json
+
+      - uses: actions-rs/cargo@v1
+        name: Check Markdown
+        with:
+          command: run
+          args: --bin document --  hypercosm.hidl proto-docs
+
+      - uses: actions-rs/cargo@v1
         name: Format
         with:
           command: fmt
