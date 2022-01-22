@@ -140,6 +140,7 @@ EnumField: EnumField = {
 
 Flags = { FlagField* }
 FlagField: FlagField = {
+    // TODO: Allow binary numbers for values
      <name:Ident> "=" <value:Int> => FlagField{<>}
 }
 
