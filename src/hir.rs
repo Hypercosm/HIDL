@@ -1,14 +1,20 @@
 //! Hir has the same types as ast, but with the following invarients:
 //!
 //! - All enum variants have a number
-//! - The implicit interface is None
-//! - All interfaces have a version
+//! - Extensions implicit interface has been moved into interfaces list
+//! - Docs have been striped with the [`doc`] module
+
+// TODO: At some point make HIR a different type to AST
+// TODO: Lint agains []u8, suggest bytes
 
 use std::collections::BTreeSet;
 
-use crate::ast::{
-    Enum, EnumField, Extension, ExtensionInterface, ImplicitInterface, Namespace, TypeDef,
-    TypeKind, Version,
+use crate::{
+    ast::{
+        Enum, EnumField, Extension, ExtensionInterface, Func, ImplicitInterface, Interface,
+        Namespace, TypeDef, TypeKind,
+    },
+    docs,
 };
 
 pub fn lower_namespace(
@@ -21,15 +27,16 @@ pub fn lower_namespace(
 ) -> Namespace {
     Namespace {
         name,
-        interfaces,
-        types: types.into_iter().map(lower_type_def).collect(),
-        extensions: extensions.into_iter().map(lower_extension).collect(),
+        interfaces: vmap(interfaces, lower_interface),
+        types: vmap(types, lower_type_def),
+        extensions: vmap(extensions, lower_extension),
     }
 }
 
 fn lower_extension(
     Extension {
         name,
+        docs,
         version,
         interface,
         interfaces,
@@ -38,17 +45,14 @@ fn lower_extension(
 ) -> Extension {
     let mut new_interfaces = interface
         .into_iter()
-        .map(|l| lower_implicit_interface(l, &name, version))
+        .map(|l| lower_implicit_interface(l, &name))
         .collect::<Vec<_>>();
 
-    new_interfaces.extend(
-        interfaces
-            .into_iter()
-            .map(|l| lower_extension_interface(l, version)),
-    );
+    new_interfaces.extend(interfaces.into_iter().map(lower_extension_interface));
 
     Extension {
         name,
+        docs: docs::lower(&docs),
         version,
         interface: None,
         interfaces: new_interfaces,
@@ -56,30 +60,37 @@ fn lower_extension(
     }
 }
 
-fn lower_implicit_interface(
-    i: ImplicitInterface,
-    name: &str,
-    version: Version,
-) -> ExtensionInterface {
-    ExtensionInterface {
-        name: name.to_owned(),
-        version: Some(version),
-        methods: i.methods,
-        events: i.events,
+fn lower_interface(i: Interface) -> Interface {
+    Interface {
+        docs: docs::lower(&i.docs),
+        name: i.name,
+        version: i.version,
+        methods: vmap(i.methods, lower_func),
+        events: vmap(i.events, lower_func),
     }
 }
 
-fn lower_extension_interface(i: ExtensionInterface, version: Version) -> ExtensionInterface {
+fn lower_implicit_interface(i: ImplicitInterface, name: &str) -> ExtensionInterface {
     ExtensionInterface {
-        name: i.name,
-        version: Some(i.version.unwrap_or(version)),
-        methods: i.methods,
-        events: i.events,
+        name: name.to_owned(),
+        docs: docs::lower(&i.docs),
+        methods: vmap(i.methods, lower_func),
+        events: vmap(i.events, lower_func),
     }
 }
-fn lower_type_def(TypeDef { name, kind }: TypeDef) -> TypeDef {
+
+fn lower_extension_interface(i: ExtensionInterface) -> ExtensionInterface {
+    ExtensionInterface {
+        name: i.name,
+        docs: docs::lower(&i.docs),
+        methods: vmap(i.methods, lower_func),
+        events: vmap(i.events, lower_func),
+    }
+}
+fn lower_type_def(TypeDef { name, kind, docs }: TypeDef) -> TypeDef {
     TypeDef {
         name,
+        docs: docs::lower(&docs),
         kind: match kind {
             TypeKind::Struct(_) => kind,
             TypeKind::Enum(e) => TypeKind::Enum(lower_enum(e)),
@@ -93,6 +104,7 @@ fn lower_enum(Enum { backing, fields }: Enum) -> Enum {
     let mut new_fields = Vec::with_capacity(fields.len());
 
     for EnumField { name, value } in fields {
+        // TODO: I think this is broken
         let value = value.unwrap_or(pos);
 
         if seen.contains(&value) {
@@ -112,4 +124,13 @@ fn lower_enum(Enum { backing, fields }: Enum) -> Enum {
         fields: new_fields,
         backing,
     }
+}
+
+fn lower_func(m: Func) -> Func {
+    let docs = docs::lower(&m.docs);
+    Func { docs, ..m }
+}
+
+fn vmap<T, U, F: Fn(T) -> U>(v: Vec<T>, f: F) -> Vec<U> {
+    v.into_iter().map(f).collect()
 }

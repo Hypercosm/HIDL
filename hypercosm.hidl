@@ -1,27 +1,60 @@
 namespace hypercosm
 
+/**
+ * The root interface, that all interfaces inherit from and
+ * all objects implement
+ */ 
 interface Object {
     version 1 0 0
 
     methods {
+        /** 
+         * Get all interfaces implemented by an object
+         * 
+         * The interfaces will be listed in the format `{namespace}.{extension}.{interface_name}.{version}`
+         */
         list_interfaces() -> []string
+
+        /**
+         * Remove the object from the object list 
+         *
+         * Future attempts to make calls on the object ID **MUST** fail.
+         *
+         * The resources associated with the object may be released, but the 
+         * object ID must not be reused, we have plenty of them
+         *
+         * It is an error to remove the root singleton (id 0)
+         */
         release()
     }
 }
 
+/**
+ * Singleton with known id 0
+ * 
+ * This is the only object that is known at the start of connection
+ * and is used to discover other objects
+ */
 interface Root {
     version 0 1 0
 
     methods {
+        /** List the extensions implemented by the conected node */
         list_extensions() -> []string
+        /** Check the conection status */
         ping()
+        // TODO: What does this do
         get_object_by_id(id: uuid) -> object
+        /** Get the id of a singleton by the name of the interface */
         get_object_by_name(name: string) -> object
     }
 }
 
+/** Delivers assets */ 
 extension asset_delivery {
     version 0 1 0
+
+    /** Singleton for asset delivery */
     interface {
         events {
             load_assets(assets: []Asset)
@@ -33,14 +66,15 @@ extension asset_delivery {
             fetch_by_name(name: string) -> Asset
             fetch_by_ids(ids: []uuid) -> []Asset
             fetch_by_names(names: []string) -> []Asset
-            getId(name: string) -> uuid
+            get_id(name: string) -> uuid
         }
     }
     
+    /** An asset: the type is given by TODO */
     struct Asset {
         id: uuid
         name: string
-        data: []u8
+        data: bytes
     }
 }
 
@@ -62,12 +96,13 @@ extension world {
     }
 
     struct EntityInfo {
-        assetId: uuid
+        asset_id: uuid
         entity: Entity
         transformation: matrix4x4
         flags: EntityFlags
     }
 
+    /** This should be flags, but isnt yet */
     enum EntityFlags(vu64) {
         None = 0
         Interactable = 1
@@ -80,8 +115,8 @@ extension execution_context {
 
     interface {
         methods {
-            load_wasm_module(assetId: uuid, exports: [string]string) -> vu64
-            load_lua_script(assetId: uuid) -> vu64
+            load_wasm_module(asset_id: uuid, exports: [string]string) -> vu64
+            load_lua_script(asset_id: uuid) -> vu64
             load_inline_lua_script(script: string) -> vu64
             begin_execution(module_or_script: vu64, entry_point: string)
             begin_inline_lua_execution(script: string)

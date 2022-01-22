@@ -3,6 +3,7 @@
   "interfaces": [
     {
       "name": "Object",
+      "docs": "The root interface, that all interfaces inherit from and\nall objects implement\n",
       "version": [
         1,
         0,
@@ -11,6 +12,7 @@
       "methods": [
         {
           "name": "list_interfaces",
+          "docs": "Get all interfaces implemented by an object\n\nThe interfaces will be listed in the format `{namespace}.{extension}.{interface_name}.{version}`\n",
           "args": [],
           "ret": {
             "Array": {
@@ -20,6 +22,7 @@
         },
         {
           "name": "release",
+          "docs": "Remove the object from the object list\n\nFuture attempts to make calls on the object ID **MUST** fail.\n\nThe resources associated with the object may be released, but the\nobject ID must not be reused, we have plenty of them\n\nIt is an error to remove the root singleton (id 0)\n",
           "args": [],
           "ret": null
         }
@@ -28,6 +31,7 @@
     },
     {
       "name": "Root",
+      "docs": "Singleton with known id 0\n\nThis is the only object that is known at the start of connection\nand is used to discover other objects\n",
       "version": [
         0,
         1,
@@ -36,6 +40,7 @@
       "methods": [
         {
           "name": "list_extensions",
+          "docs": "List the extensions implemented by the conected node\n",
           "args": [],
           "ret": {
             "Array": {
@@ -45,11 +50,13 @@
         },
         {
           "name": "ping",
+          "docs": "Check the conection status\n",
           "args": [],
           "ret": null
         },
         {
           "name": "get_object_by_id",
+          "docs": "",
           "args": [
             {
               "name": "id",
@@ -64,6 +71,7 @@
         },
         {
           "name": "get_object_by_name",
+          "docs": "Get the id of a singleton by the name of the interface\n",
           "args": [
             {
               "name": "name",
@@ -89,17 +97,15 @@
         1,
         0
       ],
+      "docs": "Delivers assets\n",
       "interfaces": [
         {
           "name": "asset_delivery",
-          "version": [
-            0,
-            1,
-            0
-          ],
+          "docs": "Singleton for asset delivery\n",
           "methods": [
             {
               "name": "fetch_by_id",
+              "docs": "",
               "args": [
                 {
                   "name": "id",
@@ -114,6 +120,7 @@
             },
             {
               "name": "fetch_by_name",
+              "docs": "",
               "args": [
                 {
                   "name": "name",
@@ -128,6 +135,7 @@
             },
             {
               "name": "fetch_by_ids",
+              "docs": "",
               "args": [
                 {
                   "name": "ids",
@@ -146,6 +154,7 @@
             },
             {
               "name": "fetch_by_names",
+              "docs": "",
               "args": [
                 {
                   "name": "names",
@@ -163,7 +172,8 @@
               }
             },
             {
-              "name": "getId",
+              "name": "get_id",
+              "docs": "",
               "args": [
                 {
                   "name": "name",
@@ -180,6 +190,7 @@
           "events": [
             {
               "name": "load_assets",
+              "docs": "",
               "args": [
                 {
                   "name": "assets",
@@ -194,6 +205,7 @@
             },
             {
               "name": "unload_assets",
+              "docs": "",
               "args": [
                 {
                   "name": "assets",
@@ -212,6 +224,7 @@
       "types": [
         {
           "name": "Asset",
+          "docs": " An asset: the type is given by TODO ",
           "kind": {
             "Struct": {
               "fields": [
@@ -230,9 +243,7 @@
                 {
                   "name": "data",
                   "ty": {
-                    "Array": {
-                      "IntType": "U8"
-                    }
+                    "Primitive": "Bytes"
                   }
                 }
               ]
@@ -248,18 +259,16 @@
         1,
         0
       ],
+      "docs": "",
       "interfaces": [
         {
           "name": "world",
-          "version": [
-            0,
-            1,
-            0
-          ],
+          "docs": "",
           "methods": [],
           "events": [
             {
               "name": "add_entities",
+              "docs": "",
               "args": [
                 {
                   "name": "entities",
@@ -274,6 +283,7 @@
             },
             {
               "name": "update_entities",
+              "docs": "",
               "args": [
                 {
                   "name": "entities",
@@ -288,6 +298,7 @@
             },
             {
               "name": "remove_entities",
+              "docs": "",
               "args": [
                 {
                   "name": "entities",
@@ -304,14 +315,11 @@
         },
         {
           "name": "Entity",
-          "version": [
-            0,
-            1,
-            0
-          ],
+          "docs": "",
           "methods": [
             {
               "name": "interact",
+              "docs": "",
               "args": [],
               "ret": null
             }
@@ -322,11 +330,12 @@
       "types": [
         {
           "name": "EntityInfo",
+          "docs": "",
           "kind": {
             "Struct": {
               "fields": [
                 {
-                  "name": "assetId",
+                  "name": "asset_id",
                   "ty": {
                     "Primitive": "Uuid"
                   }
@@ -355,21 +364,19 @@
         },
         {
           "name": "EntityFlags",
+          "docs": " This should be flags, but isnt yet ",
           "kind": {
             "Enum": {
               "backing": "VU64",
               "fields": [
                 {
-                  "name": "None",
-                  "value": 0
+                  "name": "None"
                 },
                 {
-                  "name": "Interactable",
-                  "value": 1
+                  "name": "Interactable"
                 },
                 {
-                  "name": "Collidable",
-                  "value": 2
+                  "name": "Collidable"
                 }
               ]
             }
@@ -384,20 +391,18 @@
         1,
         0
       ],
+      "docs": "",
       "interfaces": [
         {
           "name": "execution_context",
-          "version": [
-            0,
-            1,
-            0
-          ],
+          "docs": "",
           "methods": [
             {
               "name": "load_wasm_module",
+              "docs": "",
               "args": [
                 {
-                  "name": "assetId",
+                  "name": "asset_id",
                   "ty": {
                     "Primitive": "Uuid"
                   }
@@ -422,9 +427,10 @@
             },
             {
               "name": "load_lua_script",
+              "docs": "",
               "args": [
                 {
-                  "name": "assetId",
+                  "name": "asset_id",
                   "ty": {
                     "Primitive": "Uuid"
                   }
@@ -436,6 +442,7 @@
             },
             {
               "name": "load_inline_lua_script",
+              "docs": "",
               "args": [
                 {
                   "name": "script",
@@ -450,6 +457,7 @@
             },
             {
               "name": "begin_execution",
+              "docs": "",
               "args": [
                 {
                   "name": "module_or_script",
@@ -468,6 +476,7 @@
             },
             {
               "name": "begin_inline_lua_execution",
+              "docs": "",
               "args": [
                 {
                   "name": "script",
