@@ -12,6 +12,8 @@ pub struct FS {
     is_ci: bool,
 }
 
+const FORCE_CI: bool = false;
+
 impl FS {
     pub fn new() -> Self {
         Self {
@@ -22,7 +24,7 @@ impl FS {
 
     // TODO: Allow multiple open handles at the same time somehow
     pub fn open(&mut self, path: impl Into<Utf8PathBuf>) -> &mut File {
-        self.files.entry(path.into()).or_insert(File::new())
+        self.files.entry(path.into()).or_insert_with(File::new)
     }
 
     pub fn add_file(&mut self, file: File, path: impl Into<Utf8PathBuf>) {
@@ -31,15 +33,32 @@ impl FS {
     }
 
     pub fn save(self) -> io::Result<()> {
-        if self.is_ci {
-            todo!()
+        if self.is_ci || FORCE_CI {
+            let mut ood = Vec::new();
+
+            for (path, should_contents) in self.files {
+                let real_contents = fs::read(&path)?;
+                if real_contents != should_contents.contents {
+                    eprintln!("!!! File doesnt match: {}", path);
+                    ood.push(path);
+                } else {
+                    eprintln!("Up to date: {}", path)
+                }
+            }
+
+            if !ood.is_empty() {
+                eprintln!("\nSome files were out of date");
+                eprintln!("Run `run.sh` or `run.ps` to update files");
+                panic!("Out of date files");
+            }
         } else {
             for (path, contents) in self.files {
                 eprintln!("Updating {}", &path);
                 fs::write(path, contents.contents)?;
             }
-            Ok(())
         }
+
+        Ok(())
     }
 }
 
@@ -58,5 +77,17 @@ impl io::Write for File {
 
     fn flush(&mut self) -> io::Result<()> {
         self.contents.flush()
+    }
+}
+
+impl Default for File {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl Default for FS {
+    fn default() -> Self {
+        Self::new()
     }
 }
