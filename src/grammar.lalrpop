@@ -124,6 +124,8 @@ TypeDef: TypeDef = {
         => TypeDef{name, docs, kind: TypeKind::Struct(Struct{fields})},
     <docs:Doc> "enum" <name:Ident> "(" <backing:IntType> ")" "{" <fields:Enum> "}"
         => TypeDef{name, docs, kind: TypeKind::Enum(Enum{fields, backing})},
+    <docs:Doc> "flags" <name:Ident> "(" <backing:IntType> ")" "{" <fields:Flags> "}"
+        => TypeDef{name, docs, kind: TypeKind::Flags(Flags{fields, backing})},
 }
 
 Struct = { StructField* }
@@ -134,6 +136,11 @@ StructField: StructField = {
 Enum = { EnumField* }
 EnumField: EnumField = {
     <name:Ident> <value:("=" <Int>)?> => EnumField{<>}
+}
+
+Flags = { FlagField* }
+FlagField: FlagField = {
+     <name:Ident> "=" <value:Int> => FlagField{<>}
 }
 
 

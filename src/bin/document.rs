@@ -101,6 +101,7 @@ fn document_type(w: &mut dyn Write, ty: &TypeDef) -> Result<()> {
         match ty.kind {
             TypeKind::Struct(_) => "Struct",
             TypeKind::Enum(_) => "Enum",
+            TypeKind::Flags(_) => "Flags",
         },
         ty.name
     )?;
@@ -116,6 +117,11 @@ fn document_type(w: &mut dyn Write, ty: &TypeDef) -> Result<()> {
         TypeKind::Enum(e) => {
             for field in &e.fields {
                 writeln!(w, "- `{}`", field.name)?;
+            }
+        }
+        TypeKind::Flags(f) => {
+            for field in &f.fields {
+                writeln!(w, "- `{} = {:b}`", field.name, field.value)?;
             }
         }
     }

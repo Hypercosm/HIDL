@@ -128,6 +128,7 @@ pub struct TypeDef {
 pub enum TypeKind {
     Struct(Struct),
     Enum(Enum),
+    Flags(Flags),
 }
 
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -154,6 +155,18 @@ pub struct StructField {
     // TODO: Should we allow docs on fields
     pub name: String,
     pub ty: Type,
+}
+
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Flags {
+    pub backing: IntType,
+    pub fields: Vec<FlagField>,
+}
+
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct FlagField {
+    pub name: String,
+    pub value: i64,
 }
 
 fn always_none<T>(x: &Option<T>) -> bool {
