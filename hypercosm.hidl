@@ -99,11 +99,11 @@ extension world {
         asset_id: uuid
         entity: Entity
         transformation: matrix4x4
-        flags: EntityFlags
+        attrs: EntityAttrs
     }
 
-    /** This should be flags, but isnt yet */
-    enum EntityFlags(vu64) {
+    
+    flags EntityAttrs(vu64) {
         None = 0
         Interactable = 1
         Collidable = 2
