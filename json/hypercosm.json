@@ -370,13 +370,16 @@
               "backing": "VU64",
               "fields": [
                 {
-                  "name": "None"
+                  "name": "None",
+                  "value": 0
                 },
                 {
-                  "name": "Interactable"
+                  "name": "Interactable",
+                  "value": 1
                 },
                 {
-                  "name": "Collidable"
+                  "name": "Collidable",
+                  "value": 2
                 }
               ]
             }

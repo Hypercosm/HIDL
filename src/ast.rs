@@ -164,7 +164,7 @@ fn always_none<T>(x: &Option<T>) -> bool {
 
 fn always_some<T>(x: &Option<T>) -> bool {
     assert!(x.is_some());
-    true
+    false
 }
 
 impl Display for Type {
