@@ -1,0 +1,9 @@
+[book]
+authors = ["Nixon Enraght-Moony", "Hypercosm Developers"]
+language = "en"
+multilingual = false
+src = "proto-docs"
+title = "Hypercosm API docs"
+
+[build]
+build-dir = "_book_out"

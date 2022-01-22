@@ -3,6 +3,7 @@ use std::io::{self, ErrorKind, Write};
 use anyhow::{bail, ensure, Result};
 use camino::{Utf8Path, Utf8PathBuf};
 use fs_err as fs;
+use heck::ToTitleCase;
 use hidl::ast::{
     Extension, ExtensionInterface, Func, Interface, Namespace, TypeDef, TypeKind, Version,
 };
@@ -43,18 +44,31 @@ fn document(tree: &Namespace, out: &Utf8Path) -> Result<()> {
     let mut f = fs::File::create(out.join("README.md"))?;
 
     let w = &mut f;
+
+    let mut pages = vec![];
+
     writeln!(w, "# Hypercosm Protocol Docs")?;
 
     doc_all(w, document_interface, &tree.interfaces, "## Interfaces")?;
     doc_all(w, document_type, &tree.types, "## Types")?;
 
+    pages.push(("Core".to_owned(), "README.md".to_owned()));
+
     if !tree.extensions.is_empty() {
         writeln!(w, "## Extensions")?;
         for i in &tree.extensions {
             let fname = document_extension(i, out)?;
-            writeln!(w, "- [{}]({})", i.name, fname)?;
+            writeln!(w, "- [{}]({})", i.name, &fname)?;
+            pages.push((i.name.to_title_case(), fname.into_string()));
         }
     }
+
+    let mut sumarry = fs::File::create(out.join("SUMMARY.md"))?;
+
+    for (title, link) in pages {
+        writeln!(sumarry, "- [{}]({})", title, link)?;
+    }
+
     Ok(())
 }
 
