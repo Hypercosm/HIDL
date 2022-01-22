@@ -124,4 +124,6 @@ extension execution_context {
     }
 }
 
-extension test {}
+extension test {
+    version 0 0 0
+}
