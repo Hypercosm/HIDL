@@ -5,5 +5,12 @@ multilingual = false
 src = "proto-docs"
 title = "Hypercosm API docs"
 
+[output.html]
+site-url="/HIDL/"
+cname = "hypercosm.dev"
+git-repository-url = "https://github.com/Hypercosm/HIDL"
+# edit-url-template
+# TODO: When each page is from 1 HIDL file, we can use this
+
 [build]
 build-dir = "_book_out"
