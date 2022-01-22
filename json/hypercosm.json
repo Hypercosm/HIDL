@@ -353,9 +353,9 @@
                   }
                 },
                 {
-                  "name": "flags",
+                  "name": "attrs",
                   "ty": {
-                    "Custom": "EntityFlags"
+                    "Custom": "EntityAttrs"
                   }
                 }
               ]
@@ -363,10 +363,10 @@
           }
         },
         {
-          "name": "EntityFlags",
-          "docs": " This should be flags, but isnt yet ",
+          "name": "EntityAttrs",
+          "docs": "",
           "kind": {
-            "Enum": {
+            "Flags": {
               "backing": "VU64",
               "fields": [
                 {

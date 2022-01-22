@@ -94,6 +94,7 @@ fn lower_type_def(TypeDef { name, kind, docs }: TypeDef) -> TypeDef {
         kind: match kind {
             TypeKind::Struct(_) => kind,
             TypeKind::Enum(e) => TypeKind::Enum(lower_enum(e)),
+            TypeKind::Flags(_) => kind,
         },
     }
 }

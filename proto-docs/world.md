@@ -23,9 +23,9 @@
 - `asset_id`: `uuid`
 - `entity`: `Entity`
 - `transformation`: `matrix4x4`
-- `flags`: `EntityFlags`
-### Enum `EntityFlags`
- This should be flags, but isnt yet 
-- `None`
-- `Interactable`
-- `Collidable`
+- `attrs`: `EntityAttrs`
+### Flags `EntityAttrs`
+
+- `None         = 0b00`
+- `Interactable = 0b01`
+- `Collidable   = 0b10`
