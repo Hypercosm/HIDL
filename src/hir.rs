@@ -104,15 +104,17 @@ fn lower_enum(Enum { backing, fields }: Enum) -> Enum {
     let mut new_fields = Vec::with_capacity(fields.len());
 
     for EnumField { name, value } in fields {
-        // TODO: I think this is broken
+        // We implement rust semantics, see
+        // https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=22141a2d4288b7056d1b336844f827fa
+
         let value = value.unwrap_or(pos);
+        pos = value + 1;
 
         if seen.contains(&value) {
             panic!("Enum {} has duplicate value {}", name, value);
         }
 
         seen.insert(value);
-        pos += 1;
 
         new_fields.push(EnumField {
             name,
@@ -133,4 +135,77 @@ fn lower_func(m: Func) -> Func {
 
 fn vmap<T, U, F: Fn(T) -> U>(v: Vec<T>, f: F) -> Vec<U> {
     v.into_iter().map(f).collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use pretty_assertions::assert_eq;
+
+    use crate::ast::IntType;
+
+    use super::*;
+
+    #[test]
+    fn test_enum() {
+        let enm = Enum {
+            backing: IntType::I16,
+            fields: vec![
+                EnumField {
+                    name: "a".to_owned(),
+                    value: None,
+                },
+                EnumField {
+                    name: "b".to_owned(),
+                    value: None,
+                },
+                EnumField {
+                    name: "c".to_owned(),
+                    value: Some(100),
+                },
+                EnumField {
+                    name: "d".to_owned(),
+                    value: None,
+                },
+                EnumField {
+                    name: "e".to_owned(),
+                    value: Some(50),
+                },
+                EnumField {
+                    name: "f".to_owned(),
+                    value: None,
+                },
+            ],
+        };
+
+        let lowered = Enum {
+            backing: IntType::I16,
+            fields: vec![
+                EnumField {
+                    name: "a".to_owned(),
+                    value: Some(0),
+                },
+                EnumField {
+                    name: "b".to_owned(),
+                    value: Some(1),
+                },
+                EnumField {
+                    name: "c".to_owned(),
+                    value: Some(100),
+                },
+                EnumField {
+                    name: "d".to_owned(),
+                    value: Some(101),
+                },
+                EnumField {
+                    name: "e".to_owned(),
+                    value: Some(50),
+                },
+                EnumField {
+                    name: "f".to_owned(),
+                    value: Some(51),
+                },
+            ],
+        };
+        assert_eq!(lower_enum(enm), lowered);
+    }
 }
