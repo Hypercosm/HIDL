@@ -123,3 +123,5 @@ extension execution_context {
         }
     }
 }
+
+extension test {}
