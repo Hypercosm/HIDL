@@ -120,8 +120,26 @@ fn document_type(w: &mut dyn Write, ty: &TypeDef) -> Result<()> {
             }
         }
         TypeKind::Flags(f) => {
+            let min_leading_zeros = f
+                .fields
+                .iter()
+                .map(|f| f.value.leading_zeros())
+                .min()
+                .unwrap();
+
+            let max_word_len = f.fields.iter().map(|f| f.name.len()).max().unwrap();
+
+            // 64bits because f.value is i64, +2 because we need space for 0b
+            let width = 66usize
+                .checked_sub(min_leading_zeros.try_into().unwrap())
+                .unwrap();
+
             for field in &f.fields {
-                writeln!(w, "- `{} = {:b}`", field.name, field.value)?;
+                writeln!(
+                    w,
+                    "- `{:<max_word_len$} = {:#0width$b}`",
+                    field.name, field.value,
+                )?;
             }
         }
     }

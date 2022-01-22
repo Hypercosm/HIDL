@@ -26,6 +26,6 @@
 - `attrs`: `EntityAttrs`
 ### Flags `EntityAttrs`
 
-- `None = 0`
-- `Interactable = 1`
-- `Collidable = 10`
+- `None         = 0b00`
+- `Interactable = 0b01`
+- `Collidable   = 0b10`
