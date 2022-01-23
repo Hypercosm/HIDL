@@ -367,9 +367,7 @@
           "docs": "",
           "kind": {
             "Flags": {
-              "backing": {
-                "Unsigned": "VU64"
-              },
+              "backing": "VU64",
               "fields": [
                 {
                   "name": "None",
@@ -436,9 +434,7 @@
                 }
               ],
               "ret": {
-                "IntType": {
-                  "Unsigned": "VU64"
-                }
+                "IntType": "VU64"
               }
             },
             {
@@ -453,9 +449,7 @@
                 }
               ],
               "ret": {
-                "IntType": {
-                  "Unsigned": "VU64"
-                }
+                "IntType": "VU64"
               }
             },
             {
@@ -470,9 +464,7 @@
                 }
               ],
               "ret": {
-                "IntType": {
-                  "Unsigned": "VU64"
-                }
+                "IntType": "VU64"
               }
             },
             {
@@ -482,9 +474,7 @@
                 {
                   "name": "module_or_script",
                   "ty": {
-                    "IntType": {
-                      "Unsigned": "VU64"
-                    }
+                    "IntType": "VU64"
                   }
                 },
                 {

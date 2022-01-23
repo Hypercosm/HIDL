@@ -84,6 +84,7 @@ pub enum PrimType {
 }
 
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum IntType {
     Signed(SignedIntType),
     Unsigned(UnsignedIntType),
