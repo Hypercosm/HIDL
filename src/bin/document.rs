@@ -123,7 +123,7 @@ fn document_type(w: &mut dyn Write, ty: &TypeDef) -> Result<()> {
             let min_leading_zeros = f
                 .fields
                 .iter()
-                .map(|f| f.value.leading_zeros())
+                .map(|f| f.value.unwrap().leading_zeros())
                 .min()
                 .unwrap();
 
@@ -137,7 +137,12 @@ fn document_type(w: &mut dyn Write, ty: &TypeDef) -> Result<()> {
 
             for field in &f.fields {
                 //  writeln!(w, "| {} | `{:#b}` |", field.name, field.value)?;
-                writeln!(w, "| {} | `{:#0width$b}` |", field.name, field.value)?;
+                writeln!(
+                    w,
+                    "| {} | `{:#0width$b}` |",
+                    field.name,
+                    field.value.unwrap()
+                )?;
             }
         }
     }

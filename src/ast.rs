@@ -176,7 +176,29 @@ pub struct Flags {
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct FlagField {
     pub name: String,
-    pub value: u64,
+    pub expr: Expr,
+    #[serde(skip_serializing_if = "always_some")]
+    pub value: Option<u64>,
+}
+
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum Expr {
+    // These are seperate so we can pritty print them in the docs
+    Num(u64),
+    BNum(u64),
+    BinOp(Box<Expr>, Op, Box<Expr>),
+    Ident(String),
+}
+
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum Op {
+    LShift,
+    RShift,
+    BAnd,
+    BOr,
+    BXor,
+    BClear,
+    // TODO: Do we want NXor
 }
 
 fn always_none<T>(x: &Option<T>) -> bool {

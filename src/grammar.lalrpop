@@ -149,9 +149,69 @@ EnumField: EnumField = {
 Flags = { FlagField* }
 FlagField: FlagField = {
     // TODO: Allow binary numbers for values
-    <name:Ident> "=" <value:UInt> => FlagField{<>}
+    <name:Ident> "=" <expr:Expr> => FlagField{<>, value: None}
 }
 
+
+// &    bitwise AND
+// |    bitwise OR
+// ^    bitwise XOR
+// &^   bit clear (AND NOT)
+// <<   left shift
+// >>   right shift
+
+// Precedence    Operator
+//     2              <<  >>  &  &^
+//     1             |  ^
+
+// Expr =  {
+//     Expr ("<<" | ">>" | "&" | "&^") Term
+//     Term
+// }
+
+// Term = {
+//     Term ( "|" | "^") Factor
+//     Factor
+// }
+
+// Factor = {
+//     "(" Expr ")"
+//     Prim
+// }
+
+// Prim = {
+//     r"[0-9]+",
+//     r"0b[01]+"
+//     r"[a-zA-Z][a-zA-Z0-9_]*"
+// }
+
+Expr: Expr = {
+    Box<Expr> EOp Box<Term> => Expr::BinOp(<>),
+    Term => <>,
+}
+Term: Expr = {
+    Box<Term> TOp Box<Factor> => Expr::BinOp(<>),
+    Factor => <>,
+}
+Factor: Expr = {
+    "(" <Expr> ")" => <>,
+    Prim  => <>,
+}
+Prim: Expr = {
+    BInt => Expr::BNum(<>),
+    UInt => Expr::Num(<>),
+    Ident => Expr::Ident(<>),
+}
+EOp: Op = {
+    "<<" => Op::LShift,
+    ">>" => Op::RShift,
+    "&"  => Op::BAnd,
+    "&^" => Op::BClear,
+}
+TOp: Op = {
+    "|" => Op::BOr,
+    "^" => Op::BXor,
+}
 
 
 // Terminals
@@ -172,17 +232,16 @@ Int: i128 = {
     NegitiveNum => <>,
 }
 
-UInt: u64 = {
-    r"[0-9]+" => <>.parse().unwrap()
-}
-
+// TODO: Underscores
+// TODO: Maybe hex
+UInt: u64 = { r"[0-9]+" => <>.parse().unwrap() }
+BInt: u64 = { r"0b[01]+" => u64::from_str_radix(&<>[2..], 2).unwrap() }
 NegitiveNum: i128 = {
     r"-[0-9]+" => <>.parse().unwrap()
     // "-44" => -44
 }
 
 Ident: String = { r"[a-zA-Z][a-zA-Z0-9_]*" => <>.to_owned() }
-
 
 Doc: String  = { DocComment? => match <> {
     Some(doc) => doc[3..doc.len()-2].to_owned(),
@@ -198,6 +257,8 @@ DocComment = { r"/\*[^*]*\*+(?:[^/*][^*]*\*+)*/" }
 // List<T>: Vec<T> = { 
 //     <v:(<T>)*> => v
 // };
+
+Box<T>: Box<T> = { T => Box::new(<>) }
 
 Comma<T>: Vec<T> = { 
     <v:(<T> ",")*> <e:T?> => match e {
