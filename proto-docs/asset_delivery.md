@@ -25,7 +25,8 @@ Singleton for asset delivery
 
 ## Types
 ### Struct `Asset`
- An asset: the type is given by TODO 
+An asset: the type is given by TODO
+
 - `id`: `uuid`
 - `name`: `string`
 - `data`: `bytes`

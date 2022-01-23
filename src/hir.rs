@@ -3,18 +3,21 @@
 //! - All enum variants have a number
 //! - Extensions implicit interface has been moved into interfaces list
 //! - Docs have been striped with the [`doc`] module
+//! - Flag field values have been exaluated
 
 // TODO: At some point make HIR a different type to AST
 // TODO: Lint agains []u8, suggest bytes
 
 use std::collections::BTreeSet;
 
+// use debug2::dbg;
+
 use crate::{
     ast::{
-        Enum, EnumField, Extension, ExtensionInterface, Func, ImplicitInterface, Interface,
+        Enum, EnumField, Extension, ExtensionInterface, Flags, Func, ImplicitInterface, Interface,
         Namespace, TypeDef, TypeKind,
     },
-    docs,
+    docs, eval,
 };
 
 pub fn lower_namespace(
@@ -56,7 +59,7 @@ fn lower_extension(
         version,
         interface: None,
         interfaces: new_interfaces,
-        types,
+        types: vmap(types, lower_type_def),
     }
 }
 
@@ -94,7 +97,7 @@ fn lower_type_def(TypeDef { name, kind, docs }: TypeDef) -> TypeDef {
         kind: match kind {
             TypeKind::Struct(_) => kind,
             TypeKind::Enum(e) => TypeKind::Enum(lower_enum(e)),
-            TypeKind::Flags(_) => kind,
+            TypeKind::Flags(f) => TypeKind::Flags(lower_flags(f)),
         },
     }
 }
@@ -129,6 +132,15 @@ fn lower_enum(Enum { backing, fields }: Enum) -> Enum {
     }
 }
 
+fn lower_flags(mut flags: Flags) -> Flags {
+    for i in 0..flags.fields.len() {
+        // TODO: Handle lowering errors well
+        let val = eval::eval(&flags.fields[i], &flags.fields).unwrap();
+        flags.fields[i].value = Some(val);
+    }
+    flags
+}
+
 fn lower_func(m: Func) -> Func {
     let docs = docs::lower(&m.docs);
     Func { docs, ..m }
@@ -142,14 +154,14 @@ fn vmap<T, U, F: Fn(T) -> U>(v: Vec<T>, f: F) -> Vec<U> {
 mod tests {
     use pretty_assertions::assert_eq;
 
-    use crate::ast::IntType;
+    use crate::ast::{IntType, UnsignedIntType};
 
     use super::*;
 
     #[test]
     fn test_enum() {
         let enm = Enum {
-            backing: IntType::I16,
+            backing: IntType::Unsigned(UnsignedIntType::U16),
             fields: vec![
                 EnumField {
                     name: "a".to_owned(),
@@ -179,7 +191,7 @@ mod tests {
         };
 
         let lowered = Enum {
-            backing: IntType::I16,
+            backing: IntType::Unsigned(UnsignedIntType::U16),
             fields: vec![
                 EnumField {
                     name: "a".to_owned(),

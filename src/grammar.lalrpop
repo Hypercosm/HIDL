@@ -53,7 +53,7 @@ ImplicitInterface: ImplicitInterface = {
 }
 
 Version: Version = {
-    "version" <Num> <Num> <Num> => (<>)
+    "version" <UInt> <UInt> <UInt> => (<>)
 }
 
 Events: Vec<Func>  = { "events" "{" <Func*> "}" => <> }
@@ -94,27 +94,35 @@ PrimType: PrimType = {
     "f64" => PrimType::F64,
 }
 
-// These are seperate as only they can back an enum
+
 IntType: IntType = {
-    "u8" => IntType::U8,
-    "u16" => IntType::U16,
-    "u32" => IntType::U32,
-    "u64" => IntType::U64,
+    UnsignedIntType => IntType::Unsigned(<>),
+    SignedIntType   => IntType::Signed(<>), 
+}
+
+// These are seperate as only they can back an enum
+UnsignedIntType: UnsignedIntType = {
+    "u8"  => UnsignedIntType::U8,
+    "u16" => UnsignedIntType::U16,
+    "u32" => UnsignedIntType::U32,
+    "u64" => UnsignedIntType::U64,
     
-    "vu8" => IntType::VU8,
-    "vu16" => IntType::VU16,
-    "vu32" => IntType::VU32,
-    "vu64" => IntType::VU64,
+    "vu8"  => UnsignedIntType::VU8,
+    "vu16" => UnsignedIntType::VU16,
+    "vu32" => UnsignedIntType::VU32,
+    "vu64" => UnsignedIntType::VU64,
+}
 
-    "i8" => IntType::I8,
-    "i16" => IntType::I16,
-    "i32" => IntType::I32,
-    "i64" => IntType::I64,
+SignedIntType: SignedIntType = {
+    "i8"  => SignedIntType::I8,
+    "i16" => SignedIntType::I16,
+    "i32" => SignedIntType::I32,
+    "i64" => SignedIntType::I64,
 
-    "vi8" => IntType::VI8,
-    "vi16" => IntType::VI16,
-    "vi32" => IntType::VI32,
-    "vi64" => IntType::VI64,
+    "vi8"  => SignedIntType::VI8,
+    "vi16" => SignedIntType::VI16,
+    "vi32" => SignedIntType::VI32,
+    "vi64" => SignedIntType::VI64,
 }
 
 // Typedefs
@@ -141,25 +149,99 @@ EnumField: EnumField = {
 Flags = { FlagField* }
 FlagField: FlagField = {
     // TODO: Allow binary numbers for values
-     <name:Ident> "=" <value:Int> => FlagField{<>}
+    <name:Ident> "=" <expr:Expr> => FlagField{<>, value: None}
 }
 
+
+// &    bitwise AND
+// |    bitwise OR
+// ^    bitwise XOR
+// &^   bit clear (AND NOT)
+// <<   left shift
+// >>   right shift
+
+// Precedence    Operator
+//     2              <<  >>  &  &^
+//     1             |  ^
+
+// Expr =  {
+//     Expr ("<<" | ">>" | "&" | "&^") Term
+//     Term
+// }
+
+// Term = {
+//     Term ( "|" | "^") Factor
+//     Factor
+// }
+
+// Factor = {
+//     "(" Expr ")"
+//     Prim
+// }
+
+// Prim = {
+//     r"[0-9]+",
+//     r"0b[01]+"
+//     r"[a-zA-Z][a-zA-Z0-9_]*"
+// }
+
+Expr: Expr = {
+    Box<Expr> EOp Box<Term> => Expr::BinOp(<>),
+    Term => <>,
+}
+Term: Expr = {
+    Box<Term> TOp Box<Factor> => Expr::BinOp(<>),
+    Factor => <>,
+}
+Factor: Expr = {
+    "(" <Expr> ")" => <>,
+    Prim  => <>,
+}
+Prim: Expr = {
+    BInt => Expr::BNum(<>),
+    UInt => Expr::Num(<>),
+    Ident => Expr::Ident(<>),
+}
+EOp: Op = {
+    "<<" => Op::LShift,
+    ">>" => Op::RShift,
+    "&"  => Op::BAnd,
+    "&^" => Op::BClear,
+}
+TOp: Op = {
+    "|" => Op::BOr,
+    "^" => Op::BXor,
+}
 
 
 // Terminals
 
+// // Num: u8 = {
+// //     r"[0-9]+" => <>.parse().unwrap()
+// // }
 // Num: u8 = {
-//     r"[0-9]+" => <>.parse().unwrap()
+//     // TODO: This is a bit hacky, but it works for now
+//     Int => <>.try_into().unwrap(),
 // }
-Num: u8 = {
-    // TODO: This is a bit hacky, but it works for now
-    Int => <>.try_into().unwrap(),
-}
-Int: i64 = {
-    r"(-)?[0-9]+" => <>.parse().unwrap()
-}
-Ident: String = { r"[a-zA-Z][a-zA-Z0-9_]*" => <>.to_owned() }
+// Int: i64 = {
+//     r"(-)?[0-9]+" => <>.parse().unwrap()
+// }
 
+Int: i128 = {
+    UInt => <>.into(),
+    NegitiveNum => <>,
+}
+
+// TODO: Underscores
+// TODO: Maybe hex
+UInt: u64 = { r"[0-9]+" => <>.parse().unwrap() }
+BInt: u64 = { r"0b[01]+" => u64::from_str_radix(&<>[2..], 2).unwrap() }
+NegitiveNum: i128 = {
+    r"-[0-9]+" => <>.parse().unwrap()
+    // "-44" => -44
+}
+
+Ident: String = { r"[a-zA-Z][a-zA-Z0-9_]*" => <>.to_owned() }
 
 Doc: String  = { DocComment? => match <> {
     Some(doc) => doc[3..doc.len()-2].to_owned(),
@@ -175,6 +257,8 @@ DocComment = { r"/\*[^*]*\*+(?:[^/*][^*]*\*+)*/" }
 // List<T>: Vec<T> = { 
 //     <v:(<T>)*> => v
 // };
+
+Box<T>: Box<T> = { T => Box::new(<>) }
 
 Comma<T>: Vec<T> = { 
     <v:(<T> ",")*> <e:T?> => match e {
