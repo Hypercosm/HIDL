@@ -26,6 +26,8 @@
 - `attrs`: `EntityAttrs`
 ### Flags `EntityAttrs`
 
-- `None         = 0b00`
-- `Interactable = 0b01`
-- `Collidable   = 0b10`
+| Name | Value |
+|------|------:|
+| None | `0b00` |
+| Interactable | `0b01` |
+| Collidable | `0b10` |
