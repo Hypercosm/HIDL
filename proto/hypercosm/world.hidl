@@ -1,0 +1,28 @@
+extension hypercosm.world
+
+version 0 0 0
+
+events {
+    add_entities(entities: []EntityInfo)
+    update_entities(entities: []EntityInfo)
+    remove_entities(entities: []Entity)
+}
+
+object Entity {
+    methods {
+        interact()
+    }
+}
+
+struct EntityInfo {
+    asset_id: uuid
+    entity: Entity
+    transformation: matrix4x4
+    flags: EntityFlags
+}
+
+flags EntityAttrs(vu64) {
+    None         = 0b00
+    Interactable = 0b01
+    Collidable   = 0b10
+}

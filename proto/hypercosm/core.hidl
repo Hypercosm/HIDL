@@ -1,0 +1,20 @@
+extension hypercosm.cosm
+
+version 0 0 0
+
+/**
+ * Core Functionality for Hypercosm.
+ *
+ * All nodes are required to impement this extension.
+ *
+ * The callset always has handle 0.
+ */
+
+methods {
+    list_extensions() -> []string
+    ping()
+    get_extension_handle(name: string) -> handle
+    get_extension_handles(names: []string) -> []handle
+    get_handle_extension(handle: handle) -> string
+    release_handle(handle: handle)
+}

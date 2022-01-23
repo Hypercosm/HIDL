@@ -35,7 +35,7 @@ interface Object {
  * This is the only object that is known at the start of connection
  * and is used to discover other objects
  */
-interface Root {
+singleton Root {
     version 0 1 0
 
     methods {
@@ -46,7 +46,7 @@ interface Root {
         // TODO: What does this do
         get_object_by_id(id: uuid) -> object
         /** Get the id of a singleton by the name of the interface */
-        get_object_by_name(name: string) -> object
+        get_singleton_by_name(name: string) -> recv object
     }
 }
 
@@ -99,11 +99,11 @@ extension world {
         asset_id: uuid
         entity: Entity
         transformation: matrix4x4
-        attrs: EntityAttrs
+        flags: EntityFlags
     }
 
-    
-    flags EntityAttrs(vu64) {
+    /** This should be flags, but isnt yet */
+    enum EntityFlags(vu64) {
         None = 0
         Interactable = 1
         Collidable = 2

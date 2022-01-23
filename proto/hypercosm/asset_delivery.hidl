@@ -1,0 +1,22 @@
+extension hypercosm.asset_delivery
+
+version 0 0 0
+
+events {
+    load_assets(assets: []Asset)
+    unload_assets(assets: []uuid)
+}
+
+methods {
+    fetch_by_id(id: uuid) -> Asset
+    fetch_by_name(name: string) -> Asset
+    fetch_by_ids(ids: []uuid) -> []Asset
+    fetch_by_names(names: []string) -> []Asset
+    get_id(name: string) -> uuid
+}
+
+struct Asset {
+    id: uuid
+    name: string
+    data: bytes
+}

@@ -10,8 +10,6 @@
 
 use std::collections::BTreeSet;
 
-// use debug2::dbg;
-
 use crate::{
     ast::{
         Enum, EnumField, Extension, ExtensionInterface, Flags, Func, ImplicitInterface, Interface,
