@@ -142,14 +142,14 @@ fn vmap<T, U, F: Fn(T) -> U>(v: Vec<T>, f: F) -> Vec<U> {
 mod tests {
     use pretty_assertions::assert_eq;
 
-    use crate::ast::IntType;
+    use crate::ast::{IntType, UnsignedIntType};
 
     use super::*;
 
     #[test]
     fn test_enum() {
         let enm = Enum {
-            backing: IntType::I16,
+            backing: IntType::Unsigned(UnsignedIntType::U16),
             fields: vec![
                 EnumField {
                     name: "a".to_owned(),
@@ -179,7 +179,7 @@ mod tests {
         };
 
         let lowered = Enum {
-            backing: IntType::I16,
+            backing: IntType::Unsigned(UnsignedIntType::U16),
             fields: vec![
                 EnumField {
                     name: "a".to_owned(),

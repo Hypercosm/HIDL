@@ -48,7 +48,7 @@ pub struct ExtensionInterface {
     pub events: Vec<Func>,
 }
 
-pub type Version = (u8, u8, u8);
+pub type Version = (u64, u64, u64);
 
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Func {
@@ -89,6 +89,12 @@ pub enum PrimType {
 
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum IntType {
+    Signed(SignedIntType),
+    Unsigned(UnsignedIntType),
+}
+
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum UnsignedIntType {
     U8,
     U16,
     U32,
@@ -98,7 +104,10 @@ pub enum IntType {
     VU16,
     VU32,
     VU64,
+}
 
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum SignedIntType {
     I8,
     I16,
     I32,
@@ -142,7 +151,8 @@ pub struct EnumField {
     // TODO: Should we allow docs on fields
     pub name: String,
     #[serde(default, skip_serializing_if = "always_some")]
-    pub value: Option<i64>,
+    // Because we need to be able to store i64::MIN and u64::MAX
+    pub value: Option<i128>,
 }
 
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -166,7 +176,7 @@ pub struct Flags {
 #[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct FlagField {
     pub name: String,
-    pub value: i64,
+    pub value: u64,
 }
 
 fn always_none<T>(x: &Option<T>) -> bool {
@@ -209,23 +219,39 @@ impl Display for PrimType {
 
 impl Display for IntType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            IntType::Signed(i) => i.fmt(f),
+            IntType::Unsigned(u) => u.fmt(f),
+        }
+    }
+}
+
+impl Display for UnsignedIntType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(match self {
-            IntType::U8 => "u8",
-            IntType::U16 => "u16",
-            IntType::U32 => "u32",
-            IntType::U64 => "u64",
-            IntType::VU8 => "vu8",
-            IntType::VU16 => "vu16",
-            IntType::VU32 => "vu32",
-            IntType::VU64 => "vu64",
-            IntType::I8 => "i8",
-            IntType::I16 => "i16",
-            IntType::I32 => "i32",
-            IntType::I64 => "i64",
-            IntType::VI8 => "vi8",
-            IntType::VI16 => "vi16",
-            IntType::VI32 => "vi32",
-            IntType::VI64 => "vi64",
+            UnsignedIntType::U8 => "u8",
+            UnsignedIntType::U16 => "u16",
+            UnsignedIntType::U32 => "u32",
+            UnsignedIntType::U64 => "u64",
+            UnsignedIntType::VU8 => "vu8",
+            UnsignedIntType::VU16 => "vu16",
+            UnsignedIntType::VU32 => "vu32",
+            UnsignedIntType::VU64 => "vu64",
+        })
+    }
+}
+
+impl Display for SignedIntType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            SignedIntType::I8 => "i8",
+            SignedIntType::I16 => "i16",
+            SignedIntType::I32 => "i32",
+            SignedIntType::I64 => "i64",
+            SignedIntType::VI8 => "vi8",
+            SignedIntType::VI16 => "vi16",
+            SignedIntType::VI32 => "vi32",
+            SignedIntType::VI64 => "vi64",
         })
     }
 }
