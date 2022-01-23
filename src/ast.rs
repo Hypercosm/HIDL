@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Namespace {
     pub name: String,
     pub interfaces: Vec<Interface>,
@@ -10,8 +10,7 @@ pub struct Namespace {
     pub extensions: Vec<Extension>,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
-
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Extension {
     pub name: String,
     pub version: Version,
@@ -22,8 +21,7 @@ pub struct Extension {
     pub types: Vec<TypeDef>,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
-
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Interface {
     pub name: String,
     pub docs: String,
@@ -32,7 +30,7 @@ pub struct Interface {
     pub events: Vec<Func>,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct ImplicitInterface {
     // Gets version and name from extension
     pub docs: String,
@@ -40,7 +38,7 @@ pub struct ImplicitInterface {
     pub events: Vec<Func>,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct ExtensionInterface {
     pub name: String,
     pub docs: String,
@@ -50,7 +48,7 @@ pub struct ExtensionInterface {
 
 pub type Version = (u64, u64, u64);
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Func {
     pub name: String,
     pub docs: String,
@@ -58,8 +56,7 @@ pub struct Func {
     pub ret: Option<Type>,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
-
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Type {
     Primitive(PrimType),
     Custom(String),
@@ -68,14 +65,13 @@ pub enum Type {
     IntType(IntType),
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Dictionary {
     pub key: Type,
     pub value: Type,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
-
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum PrimType {
     String,
     Object,
@@ -87,13 +83,13 @@ pub enum PrimType {
     F64,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum IntType {
     Signed(SignedIntType),
     Unsigned(UnsignedIntType),
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum UnsignedIntType {
     U8,
     U16,
@@ -106,7 +102,7 @@ pub enum UnsignedIntType {
     VU64,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum SignedIntType {
     I8,
     I16,
@@ -119,34 +115,33 @@ pub enum SignedIntType {
     VI64,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
-
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Arg {
     pub name: String,
     pub ty: Type,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct TypeDef {
     pub name: String,
     pub docs: String,
     pub kind: TypeKind,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum TypeKind {
     Struct(Struct),
     Enum(Enum),
     Flags(Flags),
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Enum {
     pub backing: IntType,
     pub fields: Vec<EnumField>,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct EnumField {
     // TODO: Should we allow docs on fields
     pub name: String,
@@ -155,25 +150,25 @@ pub struct EnumField {
     pub value: Option<i128>,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Struct {
     pub fields: Vec<StructField>,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct StructField {
     // TODO: Should we allow docs on fields
     pub name: String,
     pub ty: Type,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Flags {
     pub backing: IntType,
     pub fields: Vec<FlagField>,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct FlagField {
     pub name: String,
     pub expr: Expr,
@@ -181,7 +176,7 @@ pub struct FlagField {
     pub value: Option<u64>,
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Expr {
     // These are seperate so we can pritty print them in the docs
     Num(u64),
@@ -190,7 +185,7 @@ pub enum Expr {
     Ident(String),
 }
 
-#[derive(Debug, debug2::Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, debug2::Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Op {
     LShift,
     RShift,

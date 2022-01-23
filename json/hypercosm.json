@@ -224,7 +224,7 @@
       "types": [
         {
           "name": "Asset",
-          "docs": " An asset: the type is given by TODO ",
+          "docs": "An asset: the type is given by TODO\n",
           "kind": {
             "Struct": {
               "fields": [
@@ -373,14 +373,23 @@
               "fields": [
                 {
                   "name": "None",
+                  "expr": {
+                    "Num": 0
+                  },
                   "value": 0
                 },
                 {
                   "name": "Interactable",
+                  "expr": {
+                    "Num": 1
+                  },
                   "value": 1
                 },
                 {
                   "name": "Collidable",
+                  "expr": {
+                    "Num": 2
+                  },
                   "value": 2
                 }
               ]
